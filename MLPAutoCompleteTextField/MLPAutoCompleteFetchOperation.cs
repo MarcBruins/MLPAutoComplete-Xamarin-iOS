@@ -104,6 +104,9 @@ namespace MLPAutoComplete
 			_textField.autoCompleteTableView.ReloadData();
 			_textField.autoCompleteTableView.EndUpdates ();
 
+
+			//TODO Sort all the things!
+
 //				[self setAutoCompleteSuggestions:completions];
 //				[self.autoCompleteTableView reloadData];
 //
