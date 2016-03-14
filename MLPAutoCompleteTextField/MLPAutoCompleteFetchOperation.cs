@@ -75,8 +75,6 @@ namespace MLPAutoComplete
 					if (!(firstObject is string || firstObject is MLPAutoCompletionObject))
 						Console.WriteLine ("MLPAutoCompleteTextField expects an array with objects that are either strings or conform to the MLPAutoCompletionObject protocol for possible completions.");
 
-				
-
 					autoCompleteTermsDidFetch (_textField.Text,suggestions);
 				}
 			}
@@ -101,6 +99,7 @@ namespace MLPAutoComplete
 		void autoCompleteTermsDidSort(List<Object> completions)
 		{
 			_textField.AutoCompleteSuggestions = completions;
+
 			_textField.autoCompleteTableView.BeginUpdates ();
 			_textField.autoCompleteTableView.ReloadData();
 			_textField.autoCompleteTableView.EndUpdates ();

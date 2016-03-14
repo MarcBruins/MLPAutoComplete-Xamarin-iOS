@@ -55,7 +55,7 @@ namespace MLPAutoComplete
 		public UIColor AutoCompleteTableCellBackgroundColor;
 		public UIFont AutoCompleteRegularFontName,AutoCompleteBoldFontName;
 		public NSTimer AutoCompleteFetchRequestDelay;
-		public IList AutoCompleteSuggestions;
+		public IList AutoCompleteSuggestions = new List<string>(){"Abkhazia","Afghanistan","Aland","Albania","Algeria"};
 
 		public NSOperation AutoCompleteSortQueue,AutoCompleteFetchQueue;
 
@@ -112,6 +112,18 @@ namespace MLPAutoComplete
 			fetchOperation = new MLPAutoCompleteFetchOperation (this);
 		}
 
+		public override bool BecomeFirstResponder ()
+		{
+			saveCurrentShadowProperties ();
+
+//			if(self.showAutoCompleteTableWhenEditingBegins ||
+//				…	
+//				        [self setAutoCompleteTableBackgroundColor:self.backgroundColor];
+//				    }
+			return base.BecomeFirstResponder();
+		}
+
+
 		void setAutoCompleteTableViewHidden(bool autoCompleteTableViewHidden)
 		{
 			this.autoCompleteTableView.Hidden = autoCompleteTableViewHidden;
@@ -134,20 +146,20 @@ namespace MLPAutoComplete
 			UITableViewCell cell;
 			var cellIdentifier = kDefaultAutoCompleteCellIdentifier;
 
-			if (!String.IsNullOrEmpty (this.ReuseIdentifier)) {
+			if (String.IsNullOrEmpty (this.ReuseIdentifier)) {
 				cell = tableView.DequeueReusableCell (cellIdentifier);
 				if(cell == null){
 					cell = autoCompleteTableViewCellWithReuseIdentifier (cellIdentifier);
 				}
 			}else{
-				cell = tableView.DequeueReusableCell(ReuseIdentifier);
+				cell = tableView.DequeueReusableCell(this.ReuseIdentifier);
 			}	
 			if (cell == null) {
 				Console.WriteLine ("Unable to create cell for autocomplete table");
 			}
 
 			var autoCompleteObject = this.AutoCompleteSuggestions [indexPath.Row];
-			string suggestedString;
+			string suggestedString = string.Empty;
 
 			if (autoCompleteObject is string) {
 				suggestedString = (string)autoCompleteObject;
@@ -157,35 +169,8 @@ namespace MLPAutoComplete
 				Console.WriteLine ("Unable to create cell for autocomplete table");
 			}
 
-			//this.configureCell
-//			UITableViewCell *cell = nil;
-//			NSString *cellIdentifier = kDefaultAutoCompleteCellIdentifier;
-//
-//			if(!self.reuseIdentifier){
-//				cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//				if (cell == nil) {
-//					cell = [self autoCompleteTableViewCellWithReuseIdentifier:cellIdentifier];
-//				}
-//			} else {
-//				cell = [tableView dequeueReusableCellWithIdentifier:self.reuseIdentifier];
-//			}
-//			NSAssert(cell, @"Unable to create cell for autocomplete table");
-//
-//
-//			id autoCompleteObject = self.autoCompleteSuggestions[indexPath.row];
-//			NSString *suggestedString;
-//			if([autoCompleteObject isKindOfClass:[NSString class]]){
-//				suggestedString = (NSString *)autoCompleteObject;
-//			} else if ([autoCompleteObject conformsToProtocol:@protocol(MLPAutoCompletionObject)]){
-//				suggestedString = [(id <MLPAutoCompletionObject>)autoCompleteObject autocompleteString];
-//			} else {
-//				NSAssert(0, @"Autocomplete suggestions must either be NSString or objects conforming to the MLPAutoCompletionObject protocol.");
-//			}
-//
-//
-//			[self configureCell:cell atIndexPath:indexPath withAutoCompleteString:suggestedString];
-//
-//
+			this.configureCell (cell, indexPath, suggestedString);
+
 			return cell;
 		}
 
@@ -199,17 +184,16 @@ namespace MLPAutoComplete
 			}
 
 			var autoCompleteObject = this.AutoCompleteSuggestions [indexPath.Row];
-			if (!(autoCompleteObject is MLPAutoCompletionObject)) {
+			if (autoCompleteObject is MLPAutoCompletionObject) {
 				autoCompleteObject = null;
-			}
 
-			if(autoCompleteDelegate.RespondsToSelector(new Selector("ShouldConfigureCell:")))
-			{
 				if (!(autoCompleteDelegate.ShouldConfigureCell (this, cell, autoCompleteString, (MLPAutoCompletionObject)autoCompleteObject, indexPath)))
 				{
 					return;
 				}
 			}
+
+
 
 			cell.TextLabel.TextColor = this.TextColor;
 			cell.TextLabel.Font = this.Font;
@@ -291,37 +275,49 @@ namespace MLPAutoComplete
 				this.autoCompleteTableView.Alpha = 1;
 				var tableViewWillBeAddedToViewHierarchy = this.autoCompleteTableView.Superview  == null ? true : false;
 				if (tableViewWillBeAddedToViewHierarchy) {
-					if (this.autoCompleteDelegate.RespondsToSelector (new Selector ("WillShowAutoCompleteTableView:"))) {
-						autoCompleteDelegate.WillShowAutoCompleteTableView (this, autoCompleteTableView);
-					}
+					autoCompleteDelegate.WillShowAutoCompleteTableView (this, autoCompleteTableView);
+
 				}
 			
-
-				this.Superview.BringSubviewToFront (this);
-
-//			#if BROKEN
-//			UIView *rootView = [self.window.subviews objectAtIndex:0];
-//			[rootView insertSubview:self.autoCompleteTableView
-//			belowSubview:self];
-//			#elif
-//			[self.superview insertSubview:self.autoCompleteTableView belowSubview:self];
-//			#endif
-
-				this.autoCompleteTableView.UserInteractionEnabled = true;
+				UIView rootView = Window.Subviews[0];
+				rootView.InsertSubviewBelow (this.autoCompleteTableView,this);
+				
+				autoCompleteTableView.UserInteractionEnabled = true;
+				
 				if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
-						this.Layer.ShadowColor = UIColor.Black.CGColor;
+					this.Layer.ShadowColor = UIColor.Black.CGColor;
 					this.Layer.ShadowOffset = new CGSize (0, 1);
 					this.Layer.ShadowOpacity = 0.35f;
 				}
-				if (tableViewWillBeAddedToViewHierarchy && (this.autoCompleteDelegate.RespondsToSelector (new Selector ("DidShowAutoCompleteTableView:")))) {
+				if (tableViewWillBeAddedToViewHierarchy) {
 					autoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
-				} else {
-					this.closeAutoCompleteTableView ();
-					this.restoreOriginalShadowProperties ();
-					this.autoCompleteTableView.Layer.ShadowOpacity = 0;
-				}
+				} 
 
-			}
+		}else {
+			this.closeAutoCompleteTableView ();
+			this.restoreOriginalShadowProperties ();
+			this.autoCompleteTableView.Layer.ShadowOpacity = 0;
+		}
+
+
+			//			#elif
+			//			[self.superview insertSubview:self.autoCompleteTableView belowSubview:self];
+			//			#endif
+
+			//				this.autoCompleteTableView.UserInteractionEnabled = true;
+			//				if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
+			//						this.Layer.ShadowColor = UIColor.Black.CGColor;
+			//					this.Layer.ShadowOffset = new CGSize (0, 1);
+			//					this.Layer.ShadowOpacity = 0.35f;
+			//				}
+			//				if (tableViewWillBeAddedToViewHierarchy && (this.autoCompleteDelegate.RespondsToSelector (new Selector ("DidShowAutoCompleteTableView:")))) {
+			//					autoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
+			//				} else {
+			//					this.closeAutoCompleteTableView ();
+			//					this.restoreOriginalShadowProperties ();
+			//					this.autoCompleteTableView.Layer.ShadowOpacity = 0;
+			//				}
+			//
 		}
 
 		void beginObservingKeyPathsAndNotifications()
@@ -341,8 +337,11 @@ namespace MLPAutoComplete
 
 			NSNotificationCenter.DefaultCenter.AddObserver (UITextField.TextFieldTextDidChangeNotification,async delegate(NSNotification obj) {
 				//Console.WriteLine(obj);
-				if(obj != null)
-					textFieldDidChangeWithNotification(obj);
+				try{
+					this.reloadData();
+				}catch(Exception e){
+					Console.Write(e);
+				}
 				//observeValueForKeyPath(kAutoCompleteTableViewHiddenKeyPath,null,null,null)
 			});
 
@@ -381,15 +380,14 @@ namespace MLPAutoComplete
 			
 		void closeAutoCompleteTableView()
 		{
-			if (this.autoCompleteDelegate.RespondsToSelector (new Selector ("WillHideAutoCompleteTableView:"))) {
-				autoCompleteDelegate.WillHideAutoCompleteTableView (this, autoCompleteTableView);
-			}
+			
+			autoCompleteDelegate.WillHideAutoCompleteTableView (this, autoCompleteTableView);
+
 			this.autoCompleteTableView.RemoveFromSuperview ();
 			this.restoreOriginalShadowProperties ();
 
-			if (this.autoCompleteDelegate.RespondsToSelector (new Selector ("DidHideAutoCompleteTableView:"))) {
-				autoCompleteDelegate.DidHideAutoCompleteTableView (this, autoCompleteTableView);
-			}
+			autoCompleteDelegate.DidHideAutoCompleteTableView (this, autoCompleteTableView);
+
 		}
 
 		void saveCurrentShadowProperties()
@@ -638,9 +636,7 @@ namespace MLPAutoComplete
 
 		void textFieldDidChangeWithNotification(NSNotification aNotification)
 		{
-			if(aNotification is NSNotification){
-				this.reloadData ();
-			}
+			this.reloadData ();
 		}
 
 		void reloadData(){
@@ -654,7 +650,7 @@ namespace MLPAutoComplete
 				this.autoCompleteTableView.UserInteractionEnabled = false;
 			}
 
-			this.AutoCompleteFetchQueue.Cancel ();
+			//this.AutoCompleteFetchQueue.Cancel ();
 
 			fetchOperation.Fetch (autoCompleteDataSource);
 

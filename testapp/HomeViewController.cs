@@ -18,6 +18,7 @@ namespace testapp
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			var field = autoTextField;
+		
 			field.autoCompleteDataSource = new MyDataSource ();
 			field.autoCompleteDelegate = new autoCompleteDelegate();
 		}
@@ -51,19 +52,19 @@ namespace testapp
 			}
 			public void WillShowAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 			{
-				throw new NotImplementedException ();
+				Console.WriteLine ("Autocomplete table view will be added to the view hierarchy");
 			}
 			public void DidShowAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 			{
-				throw new NotImplementedException ();
+				Console.WriteLine ("Autocomplete table view is showing from the view hierarchy");
 			}
 			public void WillHideAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 			{
-				throw new NotImplementedException ();
+				Console.WriteLine ("Autocomplete table view will be removed from the view hierarchy");
 			}
 			public void DidHideAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 			{
-				throw new NotImplementedException ();
+				Console.WriteLine ("Autocomplete table view is removed from the view hierarchy");
 			}
 			public void DidChangeNumberOfSuggestions (MLPAutoCompleteTextField textField, int numberOfSuggestions)
 			{
