@@ -16,11 +16,11 @@ namespace testapp
 		{
 			base.ViewDidLoad ();
 			// Perform any additional setup after loading the view, typically from a nib.
-
 			var field = autoTextField;
 		
 			field.autoCompleteDataSource = new MyDataSource ();
 			field.autoCompleteDelegate = new autoCompleteDelegate();
+
 		}
 
 		public override void DidReceiveMemoryWarning ()

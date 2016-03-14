@@ -141,11 +141,36 @@ namespace MLPAutoComplete
 		{
 			saveCurrentShadowProperties ();
 
-//			if(self.showAutoCompleteTableWhenEditingBegins ||
-//				…	
-//				        [self setAutoCompleteTableBackgroundColor:self.backgroundColor];
-//				    }
+			if (autoCompleteTableAppearsAsKeyboardAccessory) 
+			{
+				this.setAutoCompleteTableBackgroundColor (this.BackgroundColor);
+			}
+
 			return base.BecomeFirstResponder();
+		}
+
+		void setAutoCompleteTableBackgroundColor(UIColor autoCompleteTableBackgroundColor)
+		{
+			this.autoCompleteTableView.BackgroundColor = autoCompleteTableBackgroundColor;
+			this.AutoCompleteTableBackgroundColor = autoCompleteTableBackgroundColor;
+		}
+
+		void setAutoCompleteTableBorderWidth(float autoCompleteTableBorderWidth)
+		{
+			this.autoCompleteTableView.Layer.BorderWidth = autoCompleteTableBorderWidth;
+			this.AutoCompleteTableBorderWidth = autoCompleteTableBorderWidth;
+		}
+
+		void setAutoCompleteTableBorderColor(UIColor autoCompleteTableBorderColor)
+		{
+			this.autoCompleteTableView.Layer.BorderColor = autoCompleteTableBorderColor.CGColor;
+			this.AutoCompleteTableBorderColor = autoCompleteTableBorderColor;
+		}
+
+		void setAutoCompleteContentInsets(UIEdgeInsets autoCompleteContentInsets)
+		{
+			this.autoCompleteTableView.ContentInset = autoCompleteContentInsets;
+			this.AutoCompleteContentInsets = autoCompleteContentInsets;
 		}
 
 
@@ -587,9 +612,9 @@ namespace MLPAutoComplete
 			this.AutoCompleteContentInsets =  new UIEdgeInsets (18, 0, 0, 0);
 
 			if (BackgroundColor == UIColor.Clear)
-				AutoCompleteTableBackgroundColor = UIColor.White;
+				this.autoCompleteTableView.BackgroundColor = UIColor.White;
 			else
-				AutoCompleteTableBackgroundColor = this.BackgroundColor;
+				this.autoCompleteTableView.BackgroundColor = this.BackgroundColor;
 		}
 
 		void setLineStyleForAutoCompleteTableView()
@@ -601,9 +626,9 @@ namespace MLPAutoComplete
 			this.AutoCompleteTableBorderColor = UIColor.FromWhiteAlpha (0, 0.5f);
 
 			if (BackgroundColor == UIColor.Clear)
-				AutoCompleteTableBackgroundColor = UIColor.White;
+				this.autoCompleteTableView.BackgroundColor = UIColor.White;
 			else
-				AutoCompleteTableBackgroundColor = this.BackgroundColor;
+				this.autoCompleteTableView.BackgroundColor = this.BackgroundColor;
 		}
 
 		void setNoneStyleForAutoCompleteTableView()
@@ -622,9 +647,9 @@ namespace MLPAutoComplete
 
 
 			if (BackgroundColor == UIColor.Clear)
-				AutoCompleteTableBackgroundColor = UIColor.White;
+				this.autoCompleteTableView.BackgroundColor = UIColor.White;
 			else
-				AutoCompleteTableBackgroundColor = this.BackgroundColor;
+				this.autoCompleteTableView.BackgroundColor = this.BackgroundColor;
 		}
 
 
