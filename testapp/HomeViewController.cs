@@ -30,21 +30,17 @@ namespace testapp
 		}
 
 
-		class autoCompleteDelegate : MLPAutoCompleteTextFieldDelegate
+		class autoCompleteDelegate : IMLPAutoCompleteTextFieldDelegate
 		{
-			public bool RespondsToSelector (ObjCRuntime.Selector sel)
-			{
-				return this.RespondsToSelector(sel);
-			}
 
 			#region MLPAutoCompleteTextFieldDelegate implementation
 			public bool ShouldStyleAutoCompleteTableView (MLPAutoCompleteTextField AutoCompleteTextField, UITableView autoCompleteTableView, UITextBorderStyle borderStyle)
 			{
-				throw new NotImplementedException ();
+				return true;
 			}
 			public bool ShouldConfigureCell (MLPAutoCompleteTextField AutoCompleteTextField, UITableViewCell cell, string autoCompleteString, MLPAutoCompletionObject autoObject, Foundation.NSIndexPath NSIndexPath)
 			{
-				throw new NotImplementedException ();
+				return true;
 			}
 			public void AutoCompleteTextField (MLPAutoCompleteTextField textField, string selectedString, MLPAutoCompletionObject selectedObject, Foundation.NSIndexPath indexPath)
 			{

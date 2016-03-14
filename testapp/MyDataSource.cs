@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace testapp
 {
-	public class MyDataSource : NSObject, MLPAutoCompleteTextFieldDataSource
+	public class MyDataSource : NSObject, IMLPAutoCompleteTextFieldDataSource
 	{
 		IEnumerable<string> countries = new List<string>(){"Abkhazia","Afghanistan","Aland","Albania","Algeria"};
 

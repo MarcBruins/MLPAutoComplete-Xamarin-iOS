@@ -41,11 +41,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MLPAutoCompleteTextField.cs" />
-    <Compile Include="MLPAutoCompleteTextFieldDataSource.cs" />
-    <Compile Include="MLPAutoCompleteTextFieldDelegate.cs" />
     <Compile Include="MLPAutoCompletionObject.cs" />
     <Compile Include="MLPAutoCompleteFetchOperation.cs" />
     <Compile Include="MLPAutoCompleteSortOperation.cs" />
+    <Compile Include="IMLPAutoCompleteTextFieldDataSource.cs" />
+    <Compile Include="IMLPAutoCompleteTextFieldDelegate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

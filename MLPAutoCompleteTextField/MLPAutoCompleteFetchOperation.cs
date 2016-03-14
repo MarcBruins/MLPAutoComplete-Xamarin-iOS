@@ -24,7 +24,7 @@ namespace MLPAutoComplete
 			_textField = textField;
 		}
 
-		public void Fetch(MLPAutoCompleteTextFieldDataSource _dataSource)
+		public void Fetch(IMLPAutoCompleteTextFieldDataSource _dataSource)
 		{
 			this.IsCancelled = false;
 			var self = this;
@@ -100,9 +100,8 @@ namespace MLPAutoComplete
 		{
 			_textField.AutoCompleteSuggestions = completions;
 
-			_textField.autoCompleteTableView.BeginUpdates ();
+
 			_textField.autoCompleteTableView.ReloadData();
-			_textField.autoCompleteTableView.EndUpdates ();
 
 
 			//TODO Sort all the things!

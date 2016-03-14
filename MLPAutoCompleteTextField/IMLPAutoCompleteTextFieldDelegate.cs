@@ -5,10 +5,8 @@ using ObjCRuntime;
 
 namespace MLPAutoComplete
 {
-	public interface MLPAutoCompleteTextFieldDelegate
+	public interface IMLPAutoCompleteTextFieldDelegate
 	{
-
-		bool RespondsToSelector(Selector sel);
 
 		/*IndexPath corresponds to the order of strings within the autocomplete table,
  not the original data source.*/

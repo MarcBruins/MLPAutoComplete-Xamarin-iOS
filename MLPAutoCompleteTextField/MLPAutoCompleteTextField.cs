@@ -24,8 +24,8 @@ namespace MLPAutoComplete
 	[Register("MLPAutoCompleteTextField")]
 	public class MLPAutoCompleteTextField : UITextField, IUITableViewDataSource, IUITableViewDelegate, IMLPAutoCompleteFetchOperation, IMLPAutoCompleteSortOperation
 	{
-		public MLPAutoCompleteTextFieldDataSource autoCompleteDataSource;
-		public MLPAutoCompleteTextFieldDelegate autoCompleteDelegate;
+		public IMLPAutoCompleteTextFieldDataSource autoCompleteDataSource;
+		public IMLPAutoCompleteTextFieldDelegate autoCompleteDelegate;
 
 		const string kSortInputStringKey = "sortInputString";
 		const string kSortEditDistancesKey = "editDistances";
@@ -33,10 +33,34 @@ namespace MLPAutoComplete
 		const string kKeyboardAccessoryInputKeyPath = "autoCompleteTableAppearsAsKeyboardAccessory";
 		const double DefaultAutoCompleteRequestDelay = 0.1;
 
-		const string kBorderStyleKeyPath = "borderStyle";
-		const string kAutoCompleteTableViewHiddenKeyPath = "autoCompleteTableView.Hidden";
-		const string kBackgroundColorKeyPath = "backgroundColor";
-		const string kDefaultAutoCompleteCellIdentifier = "_DefaultAutoCompleteCellIdentifier";
+		private string _kBorderStyleKeyPath = "borderStyle";
+		private string kBorderStyleKeyPath
+		{
+			get{ return _kBorderStyleKeyPath;}
+			set{_kBorderStyleKeyPath = value; Observe (_kBorderStyleKeyPath); }
+		}
+
+
+		private string _kAutoCompleteTableViewHiddenKeyPath = "autoCompleteTableView.hidden";
+		private string kAutoCompleteTableViewHiddenKeyPath
+		{
+			get{ return _kAutoCompleteTableViewHiddenKeyPath; }
+			set{ _kAutoCompleteTableViewHiddenKeyPath = value; Observe (_kAutoCompleteTableViewHiddenKeyPath);}
+		}
+
+		private string _kBackgroundColorKeyPath = "kBackgroundColorKeyPath";
+		private string kBackgroundColorKeyPath
+		{
+			get{ return _kBackgroundColorKeyPath; }
+			set{ _kBackgroundColorKeyPath = value; Observe (_kBackgroundColorKeyPath);}
+		}
+
+		private string _kDefaultAutoCompleteCellIdentifier = "_DefaultAutoCompleteCellIdentifier";
+		private string kDefaultAutoCompleteCellIdentifier
+		{
+			get{ return _kDefaultAutoCompleteCellIdentifier; }
+			set{ _kDefaultAutoCompleteCellIdentifier = value; Observe (_kDefaultAutoCompleteCellIdentifier);}
+		}
 
 		public string incompleteString {get;set;}
 		public string[] possibleCompletions{ get; set; }
@@ -55,7 +79,7 @@ namespace MLPAutoComplete
 		public UIColor AutoCompleteTableCellBackgroundColor;
 		public UIFont AutoCompleteRegularFontName,AutoCompleteBoldFontName;
 		public NSTimer AutoCompleteFetchRequestDelay;
-		public IList AutoCompleteSuggestions = new List<string>(){"Abkhazia","Afghanistan","Aland","Albania","Algeria"};
+		public IList AutoCompleteSuggestions = new List<Object>();
 
 		public NSOperation AutoCompleteSortQueue,AutoCompleteFetchQueue;
 
@@ -103,11 +127,12 @@ namespace MLPAutoComplete
 
 		private void initialize()
 		{
+			UITableView newTableView =  this.newAutoCompleteTableViewForTextField(this);
+			this.autoCompleteTableView = newTableView;
+
 			this.beginObservingKeyPathsAndNotifications ();
 			this.setDefaultValuesForVariables ();
 
-			UITableView newTableView =  this.newAutoCompleteTableViewForTextField(this);
-			this.autoCompleteTableView = newTableView;
 
 			fetchOperation = new MLPAutoCompleteFetchOperation (this);
 		}
@@ -272,79 +297,47 @@ namespace MLPAutoComplete
 			this.resetDropDownAutoCompleteTableFrameForNumberOfRows(numberOfRows);
 		
 			if(numberOfRows > 0 && (this.autoCompleteTableViewHidden == false)){
-				this.autoCompleteTableView.Alpha = 1;
-				var tableViewWillBeAddedToViewHierarchy = this.autoCompleteTableView.Superview  == null ? true : false;
-				if (tableViewWillBeAddedToViewHierarchy) {
-					autoCompleteDelegate.WillShowAutoCompleteTableView (this, autoCompleteTableView);
+					this.autoCompleteTableView.Alpha = 1;
+					var tableViewWillBeAddedToViewHierarchy = this.autoCompleteTableView.Superview  == null ? true : false;
+					if (tableViewWillBeAddedToViewHierarchy) {
+						autoCompleteDelegate.WillShowAutoCompleteTableView (this, autoCompleteTableView);
 
-				}
-			
-				UIView rootView = Window.Subviews[0];
-				rootView.InsertSubviewBelow (this.autoCompleteTableView,this);
+					}
 				
-				autoCompleteTableView.UserInteractionEnabled = true;
-				
-				if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
-					this.Layer.ShadowColor = UIColor.Black.CGColor;
-					this.Layer.ShadowOffset = new CGSize (0, 1);
-					this.Layer.ShadowOpacity = 0.35f;
-				}
-				if (tableViewWillBeAddedToViewHierarchy) {
-					autoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
-				} 
+					UIView rootView = Window.Subviews[0];
+					rootView.InsertSubviewBelow (this.autoCompleteTableView,this);
+					
+					autoCompleteTableView.UserInteractionEnabled = true;
+					
+					if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
+						this.Layer.ShadowColor = UIColor.Black.CGColor;
+						this.Layer.ShadowOffset = new CGSize (0, 1);
+						this.Layer.ShadowOpacity = 0.35f;
+					}
+					if (tableViewWillBeAddedToViewHierarchy) {
+						autoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
+					} 
 
-		}else {
-			this.closeAutoCompleteTableView ();
-			this.restoreOriginalShadowProperties ();
-			this.autoCompleteTableView.Layer.ShadowOpacity = 0;
-		}
-
-
-			//			#elif
-			//			[self.superview insertSubview:self.autoCompleteTableView belowSubview:self];
-			//			#endif
-
-			//				this.autoCompleteTableView.UserInteractionEnabled = true;
-			//				if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
-			//						this.Layer.ShadowColor = UIColor.Black.CGColor;
-			//					this.Layer.ShadowOffset = new CGSize (0, 1);
-			//					this.Layer.ShadowOpacity = 0.35f;
-			//				}
-			//				if (tableViewWillBeAddedToViewHierarchy && (this.autoCompleteDelegate.RespondsToSelector (new Selector ("DidShowAutoCompleteTableView:")))) {
-			//					autoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
-			//				} else {
-			//					this.closeAutoCompleteTableView ();
-			//					this.restoreOriginalShadowProperties ();
-			//					this.autoCompleteTableView.Layer.ShadowOpacity = 0;
-			//				}
-			//
+			}else {
+				this.closeAutoCompleteTableView ();
+				this.restoreOriginalShadowProperties ();
+				this.autoCompleteTableView.Layer.ShadowOpacity = 0;
+			}
 		}
 
 		void beginObservingKeyPathsAndNotifications()
 		{
-			this.AddObserver(this,kBorderStyleKeyPath,NSKeyValueObservingOptions.New,System.IntPtr.Zero);
+			this.Observe (kBorderStyleKeyPath);
+			this.Observe (kBackgroundColorKeyPath);
+			this.Observe (kKeyboardAccessoryInputKeyPath);
+			this.Observe (kAutoCompleteTableViewHiddenKeyPath);
 
-		//	this.AddObserver(this,kAutoCompleteTableViewHiddenKeyPath,NSKeyValueObservingOptions.New,System.IntPtr.Zero);
+			NSNotificationCenter.DefaultCenter.AddObserver (UITextField.TextFieldTextDidChangeNotification, textFieldDidChangeWithNotification);
+		}
 
-			this.AddObserver(this,kBackgroundColorKeyPath,NSKeyValueObservingOptions.New,System.IntPtr.Zero);
-
-			this.AddObserver(this,kKeyboardAccessoryInputKeyPath,NSKeyValueObservingOptions.New,System.IntPtr.Zero);
-		
-//			NSNotificationCenter.DefaultCenter.AddObserver (this, 
-//				new ObjCRuntime.Selector ("observeValueForKeyPath:"),
-//					UITextField.TextFieldTextDidChangeNotification,
-//					this);
-
-			NSNotificationCenter.DefaultCenter.AddObserver (UITextField.TextFieldTextDidChangeNotification,async delegate(NSNotification obj) {
-				//Console.WriteLine(obj);
-				try{
-					this.reloadData();
-				}catch(Exception e){
-					Console.Write(e);
-				}
-				//observeValueForKeyPath(kAutoCompleteTableViewHiddenKeyPath,null,null,null)
-			});
-
+		public void textFieldDidChangeWithNotification(NSNotification aNotification)
+		{
+			this.reloadData ();
 		}
 
 		void stopObservingKeyPathsAndNotifications()
@@ -354,10 +347,9 @@ namespace MLPAutoComplete
 			this.RemoveObserver (this, kAutoCompleteTableViewHiddenKeyPath);
 			this.RemoveObserver (this, kBackgroundColorKeyPath);
 			this.RemoveObserver (this, kKeyboardAccessoryInputKeyPath);
-
 		}
 			
-		void observeValueForKeyPath(string keyPath, object caller, NSDictionary change, CGContext context)
+		public void Observe (string keyPath)
 		{
 			if (keyPath.Equals (kBorderStyleKeyPath)) {
 				this.styleAutoCompleteTableForBorderStyle (this.BorderStyle);
@@ -564,9 +556,10 @@ namespace MLPAutoComplete
 
 		void styleAutoCompleteTableForBorderStyle(UITextBorderStyle borderStyle)
 		{
-			if (this.autoCompleteDelegate.RespondsToSelector (new Selector ("ShouldStyleAutoCompleteTableView:"))) 
+
+			if(autoCompleteDelegate != null)
 				if(!(this.autoCompleteDelegate.ShouldStyleAutoCompleteTableView(this,autoCompleteTableView,borderStyle)))
-						return;
+					return;
 
 
 			switch (borderStyle) {
@@ -634,10 +627,6 @@ namespace MLPAutoComplete
 				AutoCompleteTableBackgroundColor = this.BackgroundColor;
 		}
 
-		void textFieldDidChangeWithNotification(NSNotification aNotification)
-		{
-			this.reloadData ();
-		}
 
 		void reloadData(){
 			fetchOperation.Cancel ();

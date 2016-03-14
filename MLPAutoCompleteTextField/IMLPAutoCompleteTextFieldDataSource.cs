@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace MLPAutoComplete
 {
-	public interface MLPAutoCompleteTextFieldDataSource
+	public interface IMLPAutoCompleteTextFieldDataSource
 	{
 
-		bool RespondsToSelector(Selector sel);
 		/*
 		 When you have the suggestions ready you must call the completionHandler block with 
 		 an NSArray of strings or objects implementing the MLPAutoCompletionObject protocol that 
