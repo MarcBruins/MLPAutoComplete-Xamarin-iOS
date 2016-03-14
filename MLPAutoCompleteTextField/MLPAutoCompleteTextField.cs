@@ -191,6 +191,31 @@ namespace MLPAutoComplete
 			return newTableView;
 		}
 
+		[Export ("tableView:didSelectRowAtIndexPath:")]
+		public void RowSelected (UIKit.UITableView tableView, Foundation.NSIndexPath indexPath)
+		{
+			if (this.autoCompleteTableAppearsAsKeyboardAccessory) {
+				this.closeAutoCompleteTableView ();
+			}
+			var cell = tableView.CellAt (indexPath);
+			string autoCompleteString = cell.TextLabel.Text;
+			this.Text = autoCompleteString;
+
+			var autoCompleteObject = this.AutoCompleteSuggestions[indexPath.Row];
+			if (autoCompleteObject != null && autoCompleteObject is MLPAutoCompletionObject) {
+				this.autoCompleteDelegate.AutoCompleteTextField (this, autoCompleteString,(MLPAutoCompletionObject) autoCompleteObject, indexPath);
+			}
+			this.finishedSearching ();
+		}
+
+		void finishedSearching()
+		{
+			if(this.ShouldResignFirstResponderFromKeyboardAfterSelectionOfAutoCompleteRows){
+				this.ResignFirstResponder();
+			}
+		}
+
+
 		public UITableViewCell GetCell (UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
 			UITableViewCell cell;
