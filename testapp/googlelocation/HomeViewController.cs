@@ -4,7 +4,7 @@ using UIKit;
 using MLPAutoComplete;
 using System.Collections.Generic;
 
-namespace testapp
+namespace googlelocation
 {
 	public partial class HomeViewController : UIViewController
 	{

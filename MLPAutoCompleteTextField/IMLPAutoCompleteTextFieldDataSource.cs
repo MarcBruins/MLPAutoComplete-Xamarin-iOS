@@ -14,7 +14,7 @@ namespace MLPAutoComplete
 		 an NSArray of strings or objects implementing the MLPAutoCompletionObject protocol that 
 		 could be used as possible completions for the given string in textField.
 		 */
-		void AutoCompleteTextField(MLPAutoCompleteTextField textField, string possibleCompletionsForString, Action<IEnumerable> completionHandler);
+		Task AutoCompleteTextField(MLPAutoCompleteTextField textField, string possibleCompletionsForString, Action<IEnumerable> completionHandler);
 
 
 		/*
@@ -22,7 +22,7 @@ namespace MLPAutoComplete
 		 that could be used as possible completions for the given string in textField.
 		This method will be called asynchronously, so an immediate return is not necessary.
 		 */
-		string[] AutoCompleteTextField(MLPAutoCompleteTextField textField, string possibleCompletionsForString);
+		Task<string[]> AutoCompleteTextField(MLPAutoCompleteTextField textField, string possibleCompletionsForString);
 
 	}
 }
