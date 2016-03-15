@@ -13,6 +13,9 @@ namespace MLPAutoComplete
 {
 	class MLPAutoCompleteFetchOperation
 	{
+
+		MLPAutoCompleteSortOperation sortOperation;
+
 		private MLPAutoCompleteTextField _textField;
 		public bool IsCancelled {
 			get;
@@ -22,6 +25,7 @@ namespace MLPAutoComplete
 		public MLPAutoCompleteFetchOperation(MLPAutoCompleteTextField textField)
 		{
 			_textField = textField;
+			sortOperation = new MLPAutoCompleteSortOperation (_textField);
 		}
 
 		public void Fetch(IMLPAutoCompleteTextFieldDataSource _dataSource)
@@ -90,7 +94,8 @@ namespace MLPAutoComplete
 			//_textField.AutoCompleteSortQueue.IsCancelled = true;
 
 			if (_textField.SortAutoCompleteSuggestionsByClosestMatch) {
-				MLPAutoCompleteSortOperation operation = new MLPAutoCompleteSortOperation (_textField);
+				var result = sortOperation.Sort (inputString, completions);
+				autoCompleteTermsDidSort (result);
 			} else {
 				autoCompleteTermsDidSort (completions);
 			}
