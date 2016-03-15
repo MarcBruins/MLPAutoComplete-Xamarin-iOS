@@ -4,7 +4,7 @@ namespace googlelocation
 {
 	public class Configuration
 	{
-		public const String MapsAPIKey = "AIzaSyDFa-Y02-JmRT1BBS-uS4Y0-JhLOY-nSik";
+		public const String MapsAPIKey = "YOUR-API-KEY";
 
 		public Configuration ()
 		{
