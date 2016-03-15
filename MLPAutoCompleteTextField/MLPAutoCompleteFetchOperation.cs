@@ -90,7 +90,7 @@ namespace MLPAutoComplete
 			//_textField.AutoCompleteSortQueue.IsCancelled = true;
 
 			if (_textField.SortAutoCompleteSuggestionsByClosestMatch) {
-				MLPAutoCompleteSortOperation operation = new MLPAutoCompleteSortOperation (inputString, completions);
+				MLPAutoCompleteSortOperation operation = new MLPAutoCompleteSortOperation (_textField);
 			} else {
 				autoCompleteTermsDidSort (completions);
 			}

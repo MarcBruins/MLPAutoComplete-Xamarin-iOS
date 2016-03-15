@@ -46,6 +46,7 @@
     <Compile Include="MLPAutoCompleteSortOperation.cs" />
     <Compile Include="IMLPAutoCompleteTextFieldDataSource.cs" />
     <Compile Include="IMLPAutoCompleteTextFieldDelegate.cs" />
+    <Compile Include="LevenshteinDistance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
