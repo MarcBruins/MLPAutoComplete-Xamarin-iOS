@@ -10,7 +10,6 @@ namespace googlelocation
 {
 	public class MyDataSource : IMLPAutoCompleteTextFieldDataSource
 	{
-		//IEnumerable<string> countries = new List<string>(){"Abkhazia","Afghanistan","Aland","Albania","Algeria"};
 		private MapsPlaceAutoComplete autoCompleteMaps = new MapsPlaceAutoComplete();
 
 		#region MLPAutoCompleteTextFieldDataSource implementation
@@ -22,7 +21,7 @@ namespace googlelocation
 			completionHandler (strings);
 		}
 
-		public Task<string[]> AutoCompleteTextField (MLPAutoCompleteTextField textField, string possibleCompletionsForString)
+		public async Task<string[]> AutoCompleteTextField (MLPAutoCompleteTextField textField, string possibleCompletionsForString)
 		{
 			throw new NotImplementedException ();
 		}

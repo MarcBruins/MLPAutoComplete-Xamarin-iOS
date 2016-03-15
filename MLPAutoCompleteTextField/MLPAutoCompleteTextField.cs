@@ -99,7 +99,7 @@ namespace MLPAutoComplete
 		private CGSize originalShadowOffset;
 		private float originalShadowOpacity;
 
-		public UITableView autoCompleteTableView;
+		public UITableView AutoCompleteTableView;
 
 		public bool AutoCompleteTableAppearsAsKeyboardAccessory;
 		private bool autoCompleteTableViewHidden;
@@ -109,7 +109,6 @@ namespace MLPAutoComplete
 		public bool DisableAutoCompleteTableUserInteractionWhileFetching = true;
 
 		MLPAutoCompleteFetchOperation fetchOperation;
-
 
 		public MLPAutoCompleteTextField(IntPtr ptr) : base(ptr)
 		{
@@ -129,7 +128,7 @@ namespace MLPAutoComplete
 		private void initialize()
 		{
 			UITableView newTableView =  this.newAutoCompleteTableViewForTextField(this);
-			this.autoCompleteTableView = newTableView;
+			this.AutoCompleteTableView = newTableView;
 
 			this.beginObservingKeyPathsAndNotifications ();
 			this.setDefaultValuesForVariables ();
@@ -152,32 +151,32 @@ namespace MLPAutoComplete
 
 		void setAutoCompleteTableBackgroundColor(UIColor autoCompleteTableBackgroundColor)
 		{
-			this.autoCompleteTableView.BackgroundColor = autoCompleteTableBackgroundColor;
+			this.AutoCompleteTableView.BackgroundColor = autoCompleteTableBackgroundColor;
 			this.AutoCompleteTableBackgroundColor = autoCompleteTableBackgroundColor;
 		}
 
 		void setAutoCompleteTableBorderWidth(float autoCompleteTableBorderWidth)
 		{
-			this.autoCompleteTableView.Layer.BorderWidth = autoCompleteTableBorderWidth;
+			this.AutoCompleteTableView.Layer.BorderWidth = autoCompleteTableBorderWidth;
 			this.AutoCompleteTableBorderWidth = autoCompleteTableBorderWidth;
 		}
 
 		void setAutoCompleteTableBorderColor(UIColor autoCompleteTableBorderColor)
 		{
-			this.autoCompleteTableView.Layer.BorderColor = autoCompleteTableBorderColor.CGColor;
+			this.AutoCompleteTableView.Layer.BorderColor = autoCompleteTableBorderColor.CGColor;
 			this.AutoCompleteTableBorderColor = autoCompleteTableBorderColor;
 		}
 
 		void setAutoCompleteContentInsets(UIEdgeInsets autoCompleteContentInsets)
 		{
-			this.autoCompleteTableView.ContentInset = autoCompleteContentInsets;
+			this.AutoCompleteTableView.ContentInset = autoCompleteContentInsets;
 			this.AutoCompleteContentInsets = autoCompleteContentInsets;
 		}
 
 
 		void setAutoCompleteTableViewHidden(bool autoCompleteTableViewHidden)
 		{
-			this.autoCompleteTableView.Hidden = autoCompleteTableViewHidden;
+			this.AutoCompleteTableView.Hidden = autoCompleteTableViewHidden;
 		}
 
 		UITableView newAutoCompleteTableViewForTextField(MLPAutoCompleteTextField textField)
@@ -195,9 +194,10 @@ namespace MLPAutoComplete
 		[Export ("tableView:didSelectRowAtIndexPath:")]
 		public void RowSelected (UIKit.UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
-			if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
+		//	if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
 				this.closeAutoCompleteTableView ();
-			}
+		//	}
+
 			var cell = tableView.CellAt (indexPath);
 			string autoCompleteString = cell.TextLabel.Text;
 			this.Text = autoCompleteString;
@@ -336,9 +336,9 @@ namespace MLPAutoComplete
 		void expandKeyboardAutoCompleteTableForNumberOfRows(int numberOfRows)
 		{
 			if(numberOfRows > 0 && (this.autoCompleteTableViewHidden == false)){
-				this.autoCompleteTableView.Alpha = 1;
+				this.AutoCompleteTableView.Alpha = 1;
 			} else {
-				this.autoCompleteTableView.Alpha = 0;
+				this.AutoCompleteTableView.Alpha = 0;
 			}
 		}
 
@@ -348,17 +348,17 @@ namespace MLPAutoComplete
 			this.resetDropDownAutoCompleteTableFrameForNumberOfRows(numberOfRows);
 
 			if(numberOfRows > 0 && (this.autoCompleteTableViewHidden == false)){
-				this.autoCompleteTableView.Alpha = 1;
-				var tableViewWillBeAddedToViewHierarchy = this.autoCompleteTableView.Superview  == null ? true : false;
+				this.AutoCompleteTableView.Alpha = 1;
+				var tableViewWillBeAddedToViewHierarchy = this.AutoCompleteTableView.Superview  == null ? true : false;
 				if (tableViewWillBeAddedToViewHierarchy) {
-					AutoCompleteDelegate.WillShowAutoCompleteTableView (this, autoCompleteTableView);
+					AutoCompleteDelegate.WillShowAutoCompleteTableView (this, AutoCompleteTableView);
 
 				}
 
 				UIView rootView = Window.Subviews[0];
-				rootView.InsertSubviewBelow (this.autoCompleteTableView,this);
+				rootView.InsertSubviewBelow (this.AutoCompleteTableView,this);
 
-				autoCompleteTableView.UserInteractionEnabled = true;
+				AutoCompleteTableView.UserInteractionEnabled = true;
 
 				if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
 					this.Layer.ShadowColor = UIColor.Black.CGColor;
@@ -366,13 +366,13 @@ namespace MLPAutoComplete
 					this.Layer.ShadowOpacity = 0.35f;
 				}
 				if (tableViewWillBeAddedToViewHierarchy) {
-					AutoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
+					AutoCompleteDelegate.DidShowAutoCompleteTableView (this, AutoCompleteTableView);
 				} 
 
 			}else {
 				this.closeAutoCompleteTableView ();
 				this.restoreOriginalShadowProperties ();
-				this.autoCompleteTableView.Layer.ShadowOpacity = 0;
+				this.AutoCompleteTableView.Layer.ShadowOpacity = 0;
 			}
 		}
 
@@ -405,10 +405,10 @@ namespace MLPAutoComplete
 			if (keyPath.Equals (kBorderStyleKeyPath)) {
 				this.styleAutoCompleteTableForBorderStyle (this.BorderStyle);
 			} else if (keyPath.Equals (kAutoCompleteTableViewHiddenKeyPath)) {
-				if (this.autoCompleteTableView.Hidden) {
+				if (this.AutoCompleteTableView.Hidden) {
 					this.closeAutoCompleteTableView ();
 				} else {
-					this.autoCompleteTableView.ReloadData ();
+					this.AutoCompleteTableView.ReloadData ();
 				}
 			} else if (keyPath.Equals (kBackgroundColorKeyPath)) {
 				styleAutoCompleteTableForBorderStyle (this.BorderStyle);
@@ -424,12 +424,12 @@ namespace MLPAutoComplete
 		void closeAutoCompleteTableView()
 		{
 
-			AutoCompleteDelegate.WillHideAutoCompleteTableView (this, autoCompleteTableView);
+			AutoCompleteDelegate.WillHideAutoCompleteTableView (this, AutoCompleteTableView);
 
-			this.autoCompleteTableView.RemoveFromSuperview ();
+			this.AutoCompleteTableView.RemoveFromSuperview ();
 			this.restoreOriginalShadowProperties ();
 
-			AutoCompleteDelegate.DidHideAutoCompleteTableView (this, autoCompleteTableView);
+			AutoCompleteDelegate.DidHideAutoCompleteTableView (this, AutoCompleteTableView);
 
 		}
 
@@ -450,38 +450,38 @@ namespace MLPAutoComplete
 		void setAutoCompleteTableForKeyboardAppearance()
 		{	
 			this.resetKeyboardAutoCompleteTableFrameForNumberOfRows (this.MaximumNumberOfAutoCompleteRows);
-			this.autoCompleteTableView.ContentInset = UIEdgeInsets.Zero;
-			this.autoCompleteTableView.ScrollIndicatorInsets = UIEdgeInsets.Zero;
-			this.InputAccessoryView = this.autoCompleteTableView;
+			this.AutoCompleteTableView.ContentInset = UIEdgeInsets.Zero;
+			this.AutoCompleteTableView.ScrollIndicatorInsets = UIEdgeInsets.Zero;
+			this.InputAccessoryView = this.AutoCompleteTableView;
 		}
 
 		void setAutoCompleteTableForDropDownAppearance()
 		{
 			this.resetDropDownAutoCompleteTableFrameForNumberOfRows (this.MaximumNumberOfAutoCompleteRows);
-			this.autoCompleteTableView.ContentInset = AutoCompleteContentInsets;
-			this.autoCompleteTableView.ScrollIndicatorInsets = AutoCompleteScrollIndicatorInsets;
+			this.AutoCompleteTableView.ContentInset = AutoCompleteContentInsets;
+			this.AutoCompleteTableView.ScrollIndicatorInsets = AutoCompleteScrollIndicatorInsets;
 			this.InputAccessoryView = null;
 		}
 
 
 		void resetKeyboardAutoCompleteTableFrameForNumberOfRows(int numberOfRows)
 		{
-			this.autoCompleteTableView.Layer.CornerRadius = 0;
+			this.AutoCompleteTableView.Layer.CornerRadius = 0;
 
 			var newAutoCompleteTableViewFrame = autoCompleteTableViewFrameForTextField (this, numberOfRows);
-			this.autoCompleteTableView.Frame = newAutoCompleteTableViewFrame;
+			this.AutoCompleteTableView.Frame = newAutoCompleteTableViewFrame;
 
-			this.autoCompleteTableView.AutoresizingMask = UIViewAutoresizing.FlexibleWidth;
-			this.autoCompleteTableView.ScrollRectToVisible (new CGRect(0,0,1,1), false);
+			this.AutoCompleteTableView.AutoresizingMask = UIViewAutoresizing.FlexibleWidth;
+			this.AutoCompleteTableView.ScrollRectToVisible (new CGRect(0,0,1,1), false);
 		}
 
 		void resetDropDownAutoCompleteTableFrameForNumberOfRows(int numberOfRows)
 		{
-			this.autoCompleteTableView.Layer.CornerRadius = this.AutoCompleteTableCornerRadius;
+			this.AutoCompleteTableView.Layer.CornerRadius = this.AutoCompleteTableCornerRadius;
 			var newAutoCompleteTableViewFrame = autoCompleteTableViewFrameForTextField (this, numberOfRows);
 
-			this.autoCompleteTableView.Frame = newAutoCompleteTableViewFrame;
-			this.autoCompleteTableView.ScrollRectToVisible (new CGRect(0,0,1,1), false);
+			this.AutoCompleteTableView.Frame = newAutoCompleteTableViewFrame;
+			this.AutoCompleteTableView.ScrollRectToVisible (new CGRect(0,0,1,1), false);
 		}
 
 		CGRect autoCompleteTableViewFrameForTextField(MLPAutoCompleteTextField textField, int numberOfRows)
@@ -516,7 +516,7 @@ namespace MLPAutoComplete
 			//
 			//			return newTableViewFrame;
 			CGRect newTableViewFrame = autoCompleteTableViewFrameForTextField(textField);
-			nfloat textfieldTopInset = textField.autoCompleteTableView.ContentInset.Top;
+			nfloat textfieldTopInset = textField.AutoCompleteTableView.ContentInset.Top;
 			nfloat height = this.autoCompleteTableHeightForTextField(textField, numberOfRows);
 
 			newTableViewFrame.Height = height;
@@ -564,7 +564,7 @@ namespace MLPAutoComplete
 
 		void registerAutoCompleteCellNib(UINib nib, string reuseIdentifier)
 		{
-			if (this.autoCompleteTableView == null) {
+			if (this.AutoCompleteTableView == null) {
 				Console.WriteLine ("Must have an autoCompleteTableView to register cells to.");
 				return;
 			}
@@ -573,14 +573,14 @@ namespace MLPAutoComplete
 				this.unregisterAutoCompleteCellForReuseIdentifier (reuseIdentifier);
 			}
 
-			this.autoCompleteTableView.RegisterNibForCellReuse (nib, reuseIdentifier);
+			this.AutoCompleteTableView.RegisterNibForCellReuse (nib, reuseIdentifier);
 			this.ReuseIdentifier = reuseIdentifier;
 		}
 
 
 		void registerAutoCompleteCellClass(Type cellClass, string reuseIdentifier)
 		{
-			if (this.autoCompleteTableView == null) {
+			if (this.AutoCompleteTableView == null) {
 				Console.WriteLine ("Must have an autoCompleteTableView to register cells to.");
 				return;
 			}
@@ -589,19 +589,19 @@ namespace MLPAutoComplete
 			}	
 
 
-			var classSettingSupported = this.autoCompleteTableView.RespondsToSelector (new Selector ("registerClass:forCellReuseIdentifier:"));
+			var classSettingSupported = this.AutoCompleteTableView.RespondsToSelector (new Selector ("registerClass:forCellReuseIdentifier:"));
 			if (classSettingSupported) {
 				Console.WriteLine ("Unable to set class for cell for autocomplete table, in iOS 5.0 you can set a custom NIB for a reuse identifier to get similar functionality.");
 			}
 
-			autoCompleteTableView.RegisterClassForCellReuse (cellClass, reuseIdentifier);
+			AutoCompleteTableView.RegisterClassForCellReuse (cellClass, reuseIdentifier);
 			this.ReuseIdentifier = reuseIdentifier;
 		}
 
 
 		void unregisterAutoCompleteCellForReuseIdentifier(string reuseIdentifier)
 		{
-			this.autoCompleteTableView.RegisterNibForCellReuse (null, reuseIdentifier);
+			this.AutoCompleteTableView.RegisterNibForCellReuse (null, reuseIdentifier);
 		}
 
 
@@ -609,7 +609,7 @@ namespace MLPAutoComplete
 		{
 
 			if(AutoCompleteDelegate != null)
-			if(!(this.AutoCompleteDelegate.ShouldStyleAutoCompleteTableView(this,autoCompleteTableView,borderStyle)))
+			if(!(this.AutoCompleteDelegate.ShouldStyleAutoCompleteTableView(this,AutoCompleteTableView,borderStyle)))
 				return;
 
 
@@ -638,9 +638,9 @@ namespace MLPAutoComplete
 			this.AutoCompleteContentInsets =  new UIEdgeInsets (18, 0, 0, 0);
 
 			if (BackgroundColor == UIColor.Clear)
-				this.autoCompleteTableView.BackgroundColor = UIColor.White;
+				this.AutoCompleteTableView.BackgroundColor = UIColor.White;
 			else
-				this.autoCompleteTableView.BackgroundColor = this.BackgroundColor;
+				this.AutoCompleteTableView.BackgroundColor = this.BackgroundColor;
 		}
 
 		void setLineStyleForAutoCompleteTableView()
@@ -652,9 +652,9 @@ namespace MLPAutoComplete
 			this.AutoCompleteTableBorderColor = UIColor.FromWhiteAlpha (0, 0.5f);
 
 			if (BackgroundColor == UIColor.Clear)
-				this.autoCompleteTableView.BackgroundColor = UIColor.White;
+				this.AutoCompleteTableView.BackgroundColor = UIColor.White;
 			else
-				this.autoCompleteTableView.BackgroundColor = this.BackgroundColor;
+				this.AutoCompleteTableView.BackgroundColor = this.BackgroundColor;
 		}
 
 		void setNoneStyleForAutoCompleteTableView()
@@ -673,9 +673,9 @@ namespace MLPAutoComplete
 
 
 			if (BackgroundColor == UIColor.Clear)
-				this.autoCompleteTableView.BackgroundColor = UIColor.White;
+				this.AutoCompleteTableView.BackgroundColor = UIColor.White;
 			else
-				this.autoCompleteTableView.BackgroundColor = this.BackgroundColor;
+				this.AutoCompleteTableView.BackgroundColor = this.BackgroundColor;
 		}
 
 
@@ -687,7 +687,7 @@ namespace MLPAutoComplete
 		void fetchAutoCompleteSuggestions()
 		{
 			if (this.DisableAutoCompleteTableUserInteractionWhileFetching) {
-				this.autoCompleteTableView.UserInteractionEnabled = false;
+				this.AutoCompleteTableView.UserInteractionEnabled = false;
 			}
 
 			//this.AutoCompleteFetchQueue.Cancel ();

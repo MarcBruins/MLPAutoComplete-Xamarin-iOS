@@ -104,7 +104,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\MLPAutoCompleteTextField\MLPAutoComplete.csproj">
+    <ProjectReference Include="..\..\MLPAutoCompleteTextField\MLPAutoComplete.csproj">
       <Project>{A888663F-0609-4C2E-9371-FAB29379D3DA}</Project>
       <Name>MLPAutoComplete</Name>
     </ProjectReference>

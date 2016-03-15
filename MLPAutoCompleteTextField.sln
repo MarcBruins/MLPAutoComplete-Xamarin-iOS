@@ -5,9 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MLPAutoComplete", "MLPAutoC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{64B096D4-15CF-443B-B715-332C0B3641C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testapp", "testapp\testapp.csproj", "{70A55997-182B-409F-907E-E019D7A1964E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "googlelocation", "Samples\googlelocation\googlelocation.csproj", "{E2910283-F6C2-49C6-AB20-505060FDDFC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "googlelocation", "testapp\googlelocation\googlelocation.csproj", "{E2910283-F6C2-49C6-AB20-505060FDDFC9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testapp", "Samples\testapp\testapp.csproj", "{70A55997-182B-409F-907E-E019D7A1964E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,7 +57,7 @@ Global
 		{E2910283-F6C2-49C6-AB20-505060FDDFC9}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{70A55997-182B-409F-907E-E019D7A1964E} = {64B096D4-15CF-443B-B715-332C0B3641C9}
 		{E2910283-F6C2-49C6-AB20-505060FDDFC9} = {64B096D4-15CF-443B-B715-332C0B3641C9}
+		{70A55997-182B-409F-907E-E019D7A1964E} = {64B096D4-15CF-443B-B715-332C0B3641C9}
 	EndGlobalSection
 EndGlobal

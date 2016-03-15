@@ -99,7 +99,7 @@ namespace MLPAutoComplete
 		void autoCompleteTermsDidSort(List<Object> completions)
 		{
 			_textField.AutoCompleteSuggestions = completions;
-			_textField.autoCompleteTableView.ReloadData();
+			_textField.AutoCompleteTableView.ReloadData();
 
 
 			//TODO Sort all the things!

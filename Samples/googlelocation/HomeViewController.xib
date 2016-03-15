@@ -15,19 +15,26 @@
         <view contentMode="scaleToFill" id="2">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <subviews>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="E8W-hc-VRu" customClass="MLPAutoCompleteTextField">
-                    <rect key="frame" x="252" y="285" width="97" height="30"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="E8W-hc-VRu" customClass="MLPAutoCompleteTextField">
+                    <rect key="frame" x="50" y="285" width="500" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="200" id="Xqy-6b-KBw"/>
+                        <constraint firstAttribute="width" constant="400" id="Xqy-6b-KBw"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="Xqy-6b-KBw"/>
+                        </mask>
+                    </variation>
                 </textField>
             </subviews>
-            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="E8W-hc-VRu" firstAttribute="centerY" secondItem="2" secondAttribute="centerY" id="1ea-fO-V6v"/>
+                <constraint firstItem="E8W-hc-VRu" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="50" id="AxM-qV-QPA"/>
                 <constraint firstItem="E8W-hc-VRu" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="CAj-Zg-PTe"/>
+                <constraint firstAttribute="trailing" secondItem="E8W-hc-VRu" secondAttribute="trailing" constant="50" id="HBU-mQ-yyo"/>
             </constraints>
         </view>
     </objects>
