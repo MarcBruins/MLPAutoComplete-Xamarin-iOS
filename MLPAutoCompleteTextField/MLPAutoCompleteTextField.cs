@@ -24,8 +24,8 @@ namespace MLPAutoComplete
 	[Register("MLPAutoCompleteTextField")]
 	public class MLPAutoCompleteTextField : UITextField, IUITableViewDataSource, IUITableViewDelegate, IMLPAutoCompleteFetchOperation, IMLPAutoCompleteSortOperation
 	{
-		public IMLPAutoCompleteTextFieldDataSource autoCompleteDataSource;
-		public IMLPAutoCompleteTextFieldDelegate autoCompleteDelegate;
+		public IMLPAutoCompleteTextFieldDataSource AutoCompleteDataSource;
+		public IMLPAutoCompleteTextFieldDelegate AutoCompleteDelegate;
 
 		const string kSortInputStringKey = "sortInputString";
 		const string kSortEditDistancesKey = "editDistances";
@@ -62,8 +62,8 @@ namespace MLPAutoComplete
 			set{ _kDefaultAutoCompleteCellIdentifier = value; Observe (_kDefaultAutoCompleteCellIdentifier);}
 		}
 
-		public string incompleteString {get;set;}
-		public string[] possibleCompletions{ get; set; }
+		public string IncompleteString {get;set;}
+		private string[] possibleCompletions{ get; set; }
 
 		public bool SortAutoCompleteSuggestionsByClosestMatch = false;
 		public bool ApplyBoldEffectToAutoCompleteSuggestions = false;
@@ -95,17 +95,18 @@ namespace MLPAutoComplete
 		public UIColor AutoCompleteTableCellTextColor;
 
 
-		public CGColor originalShadowColor;
-		public CGSize originalShadowOffset;
-		public float originalShadowOpacity;
+		private CGColor originalShadowColor;
+		private CGSize originalShadowOffset;
+		private float originalShadowOpacity;
 
 		public UITableView autoCompleteTableView;
 
-		private bool autoCompleteTableAppearsAsKeyboardAccessory,autoCompleteTableViewHidden;
+		public bool AutoCompleteTableAppearsAsKeyboardAccessory;
+		private bool autoCompleteTableViewHidden;
 
 		public string ReuseIdentifier;
 
-		public bool disableAutoCompleteTableUserInteractionWhileFetching = true;
+		public bool DisableAutoCompleteTableUserInteractionWhileFetching = true;
 
 		MLPAutoCompleteFetchOperation fetchOperation;
 
@@ -141,7 +142,7 @@ namespace MLPAutoComplete
 		{
 			saveCurrentShadowProperties ();
 
-			if (autoCompleteTableAppearsAsKeyboardAccessory) 
+			if (AutoCompleteTableAppearsAsKeyboardAccessory) 
 			{
 				this.setAutoCompleteTableBackgroundColor (this.BackgroundColor);
 			}
@@ -194,7 +195,7 @@ namespace MLPAutoComplete
 		[Export ("tableView:didSelectRowAtIndexPath:")]
 		public void RowSelected (UIKit.UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
-			if (this.autoCompleteTableAppearsAsKeyboardAccessory) {
+			if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
 				this.closeAutoCompleteTableView ();
 			}
 			var cell = tableView.CellAt (indexPath);
@@ -203,7 +204,7 @@ namespace MLPAutoComplete
 
 			var autoCompleteObject = this.AutoCompleteSuggestions[indexPath.Row];
 			if (autoCompleteObject != null && autoCompleteObject is MLPAutoCompletionObject) {
-				this.autoCompleteDelegate.AutoCompleteTextField (this, autoCompleteString,(MLPAutoCompletionObject) autoCompleteObject, indexPath);
+				this.AutoCompleteDelegate.AutoCompleteTextField (this, autoCompleteString,(MLPAutoCompletionObject) autoCompleteObject, indexPath);
 			}
 			this.finishedSearching ();
 		}
@@ -262,7 +263,7 @@ namespace MLPAutoComplete
 			if (autoCompleteObject is MLPAutoCompletionObject) {
 				autoCompleteObject = null;
 
-				if (!(autoCompleteDelegate.ShouldConfigureCell (this, cell, autoCompleteString, (MLPAutoCompletionObject)autoCompleteObject, indexPath)))
+				if (!(AutoCompleteDelegate.ShouldConfigureCell (this, cell, autoCompleteString, (MLPAutoCompletionObject)autoCompleteObject, indexPath)))
 				{
 					return;
 				}
@@ -275,30 +276,30 @@ namespace MLPAutoComplete
 
 			cell.TextLabel.Text = autoCompleteString;
 
-		
+
 			//TODO
-//
-//			if (AutoCompleteTableCellTextColor) {
-//				cell.TextLabel.TextColor = this.autoCompleteTableCellTextColor;
-//			}
-//			if(boldedString){
-//				if ([cell.textLabel respondsToSelector:@selector(setAttributedText:)]) {
-//					[cell.textLabel setAttributedText:boldedString];
-//				} else{
-//					[cell.textLabel setText:string];
-//					[cell.textLabel setFont:[UIFont fontWithName:self.font.fontName size:self.autoCompleteFontSize]];
-//				}
-//
-//			} else {
-//				[cell.textLabel setText:string];
-//				[cell.textLabel setFont:[UIFont fontWithName:self.font.fontName size:self.autoCompleteFontSize]];
-//			}
-//
-//			cell.accessibilityLabel = [[self class] accessibilityLabelForIndexPath:indexPath];
-//
-//			if(self.autoCompleteTableCellTextColor){
-//				[cell.textLabel setTextColor:self.autoCompleteTableCellTextColor];
-//			}
+			//
+			//			if (AutoCompleteTableCellTextColor) {
+			//				cell.TextLabel.TextColor = this.autoCompleteTableCellTextColor;
+			//			}
+			//			if(boldedString){
+			//				if ([cell.textLabel respondsToSelector:@selector(setAttributedText:)]) {
+			//					[cell.textLabel setAttributedText:boldedString];
+			//				} else{
+			//					[cell.textLabel setText:string];
+			//					[cell.textLabel setFont:[UIFont fontWithName:self.font.fontName size:self.autoCompleteFontSize]];
+			//				}
+			//
+			//			} else {
+			//				[cell.textLabel setText:string];
+			//				[cell.textLabel setFont:[UIFont fontWithName:self.font.fontName size:self.autoCompleteFontSize]];
+			//			}
+			//
+			//			cell.accessibilityLabel = [[self class] accessibilityLabelForIndexPath:indexPath];
+			//
+			//			if(self.autoCompleteTableCellTextColor){
+			//				[cell.textLabel setTextColor:self.autoCompleteTableCellTextColor];
+			//			}
 		}
 
 		UITableViewCell autoCompleteTableViewCellWithReuseIdentifier(string identifier)
@@ -322,11 +323,11 @@ namespace MLPAutoComplete
 		{
 			if (numberOfRows <= 0)
 				Console.WriteLine ("Number of rows given for auto complete table was negative, this is impossible.");
-			
+
 			if (!this.IsFirstResponder)
 				return;
 
-			if (this.autoCompleteTableAppearsAsKeyboardAccessory)
+			if (this.AutoCompleteTableAppearsAsKeyboardAccessory)
 				this.expandKeyboardAutoCompleteTableForNumberOfRows (numberOfRows);
 			else
 				this.expandDropDownAutoCompleteTableForNumberOfRows (numberOfRows);
@@ -345,28 +346,28 @@ namespace MLPAutoComplete
 		void expandDropDownAutoCompleteTableForNumberOfRows(int numberOfRows)
 		{
 			this.resetDropDownAutoCompleteTableFrameForNumberOfRows(numberOfRows);
-		
-			if(numberOfRows > 0 && (this.autoCompleteTableViewHidden == false)){
-					this.autoCompleteTableView.Alpha = 1;
-					var tableViewWillBeAddedToViewHierarchy = this.autoCompleteTableView.Superview  == null ? true : false;
-					if (tableViewWillBeAddedToViewHierarchy) {
-						autoCompleteDelegate.WillShowAutoCompleteTableView (this, autoCompleteTableView);
 
-					}
-				
-					UIView rootView = Window.Subviews[0];
-					rootView.InsertSubviewBelow (this.autoCompleteTableView,this);
-					
-					autoCompleteTableView.UserInteractionEnabled = true;
-					
-					if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
-						this.Layer.ShadowColor = UIColor.Black.CGColor;
-						this.Layer.ShadowOffset = new CGSize (0, 1);
-						this.Layer.ShadowOpacity = 0.35f;
-					}
-					if (tableViewWillBeAddedToViewHierarchy) {
-						autoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
-					} 
+			if(numberOfRows > 0 && (this.autoCompleteTableViewHidden == false)){
+				this.autoCompleteTableView.Alpha = 1;
+				var tableViewWillBeAddedToViewHierarchy = this.autoCompleteTableView.Superview  == null ? true : false;
+				if (tableViewWillBeAddedToViewHierarchy) {
+					AutoCompleteDelegate.WillShowAutoCompleteTableView (this, autoCompleteTableView);
+
+				}
+
+				UIView rootView = Window.Subviews[0];
+				rootView.InsertSubviewBelow (this.autoCompleteTableView,this);
+
+				autoCompleteTableView.UserInteractionEnabled = true;
+
+				if (ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen) {
+					this.Layer.ShadowColor = UIColor.Black.CGColor;
+					this.Layer.ShadowOffset = new CGSize (0, 1);
+					this.Layer.ShadowOpacity = 0.35f;
+				}
+				if (tableViewWillBeAddedToViewHierarchy) {
+					AutoCompleteDelegate.DidShowAutoCompleteTableView (this, autoCompleteTableView);
+				} 
 
 			}else {
 				this.closeAutoCompleteTableView ();
@@ -398,8 +399,8 @@ namespace MLPAutoComplete
 			this.RemoveObserver (this, kBackgroundColorKeyPath);
 			this.RemoveObserver (this, kKeyboardAccessoryInputKeyPath);
 		}
-			
-		public void Observe (string keyPath)
+
+		private void Observe (string keyPath)
 		{
 			if (keyPath.Equals (kBorderStyleKeyPath)) {
 				this.styleAutoCompleteTableForBorderStyle (this.BorderStyle);
@@ -412,23 +413,23 @@ namespace MLPAutoComplete
 			} else if (keyPath.Equals (kBackgroundColorKeyPath)) {
 				styleAutoCompleteTableForBorderStyle (this.BorderStyle);
 			} else if (keyPath.Equals (kKeyboardAccessoryInputKeyPath)) {
-				if (this.autoCompleteTableAppearsAsKeyboardAccessory) {
+				if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
 					this.setAutoCompleteTableForKeyboardAppearance ();
 				} else {
 					this.setAutoCompleteTableForDropDownAppearance ();
 				}
 			}
 		}
-			
+
 		void closeAutoCompleteTableView()
 		{
-			
-			autoCompleteDelegate.WillHideAutoCompleteTableView (this, autoCompleteTableView);
+
+			AutoCompleteDelegate.WillHideAutoCompleteTableView (this, autoCompleteTableView);
 
 			this.autoCompleteTableView.RemoveFromSuperview ();
 			this.restoreOriginalShadowProperties ();
 
-			autoCompleteDelegate.DidHideAutoCompleteTableView (this, autoCompleteTableView);
+			AutoCompleteDelegate.DidHideAutoCompleteTableView (this, autoCompleteTableView);
 
 		}
 
@@ -485,41 +486,41 @@ namespace MLPAutoComplete
 
 		CGRect autoCompleteTableViewFrameForTextField(MLPAutoCompleteTextField textField, int numberOfRows)
 		{
-//			#if BROKEN
-//			// TODO: Reimplement this code for people using table views. Right now it breaks
-//			//       more normal use cases because of UILayoutContainerView
-//			CGRect newTableViewFrame             = [self autoCompleteTableViewFrameForTextField:textField];
-//
-//			UIView *rootView                     = [textField.window.subviews objectAtIndex:0];
-//			CGRect textFieldFrameInContainerView = [rootView convertRect:textField.bounds
-//			fromView:textField];
-//
-//			CGFloat textfieldTopInset = textField.autoCompleteTableView.contentInset.top;
-//			CGFloat converted_originY = textFieldFrameInContainerView.origin.y + textfieldTopInset;
-//
-//			#else
-//			CGRect newTableViewFrame = [self autoCompleteTableViewFrameForTextField:textField];
-//			CGFloat textfieldTopInset = textField.autoCompleteTableView.contentInset.top;
-//			#endif
-//
-//			CGFloat height = [self autoCompleteTableHeightForTextField:textField withNumberOfRows:numberOfRows];
-//
-//			newTableViewFrame.size.height = height;
-//			#if BROKEN
-//			newTableViewFrame.origin.y    = converted_originY;
-//			#endif
-//
-//			if(!textField.autoCompleteTableAppearsAsKeyboardAccessory){
-//				newTableViewFrame.size.height += textfieldTopInset;
-//			}
-//
-//			return newTableViewFrame;
+			//			#if BROKEN
+			//			// TODO: Reimplement this code for people using table views. Right now it breaks
+			//			//       more normal use cases because of UILayoutContainerView
+			//			CGRect newTableViewFrame             = [self autoCompleteTableViewFrameForTextField:textField];
+			//
+			//			UIView *rootView                     = [textField.window.subviews objectAtIndex:0];
+			//			CGRect textFieldFrameInContainerView = [rootView convertRect:textField.bounds
+			//			fromView:textField];
+			//
+			//			CGFloat textfieldTopInset = textField.autoCompleteTableView.contentInset.top;
+			//			CGFloat converted_originY = textFieldFrameInContainerView.origin.y + textfieldTopInset;
+			//
+			//			#else
+			//			CGRect newTableViewFrame = [self autoCompleteTableViewFrameForTextField:textField];
+			//			CGFloat textfieldTopInset = textField.autoCompleteTableView.contentInset.top;
+			//			#endif
+			//
+			//			CGFloat height = [self autoCompleteTableHeightForTextField:textField withNumberOfRows:numberOfRows];
+			//
+			//			newTableViewFrame.size.height = height;
+			//			#if BROKEN
+			//			newTableViewFrame.origin.y    = converted_originY;
+			//			#endif
+			//
+			//			if(!textField.autoCompleteTableAppearsAsKeyboardAccessory){
+			//				newTableViewFrame.size.height += textfieldTopInset;
+			//			}
+			//
+			//			return newTableViewFrame;
 			CGRect newTableViewFrame = autoCompleteTableViewFrameForTextField(textField);
 			nfloat textfieldTopInset = textField.autoCompleteTableView.ContentInset.Top;
 			nfloat height = this.autoCompleteTableHeightForTextField(textField, numberOfRows);
 
 			newTableViewFrame.Height = height;
-			if(!textField.autoCompleteTableAppearsAsKeyboardAccessory){
+			if(!textField.AutoCompleteTableAppearsAsKeyboardAccessory){
 				newTableViewFrame.Height += textfieldTopInset;
 			}
 			return newTableViewFrame;
@@ -571,7 +572,7 @@ namespace MLPAutoComplete
 			if (!String.IsNullOrEmpty (reuseIdentifier)) {
 				this.unregisterAutoCompleteCellForReuseIdentifier (reuseIdentifier);
 			}
-				
+
 			this.autoCompleteTableView.RegisterNibForCellReuse (nib, reuseIdentifier);
 			this.ReuseIdentifier = reuseIdentifier;
 		}
@@ -607,9 +608,9 @@ namespace MLPAutoComplete
 		void styleAutoCompleteTableForBorderStyle(UITextBorderStyle borderStyle)
 		{
 
-			if(autoCompleteDelegate != null)
-				if(!(this.autoCompleteDelegate.ShouldStyleAutoCompleteTableView(this,autoCompleteTableView,borderStyle)))
-					return;
+			if(AutoCompleteDelegate != null)
+			if(!(this.AutoCompleteDelegate.ShouldStyleAutoCompleteTableView(this,autoCompleteTableView,borderStyle)))
+				return;
 
 
 			switch (borderStyle) {
@@ -685,22 +686,22 @@ namespace MLPAutoComplete
 
 		void fetchAutoCompleteSuggestions()
 		{
-			if (this.disableAutoCompleteTableUserInteractionWhileFetching) {
+			if (this.DisableAutoCompleteTableUserInteractionWhileFetching) {
 				this.autoCompleteTableView.UserInteractionEnabled = false;
 			}
 
 			//this.AutoCompleteFetchQueue.Cancel ();
 
-			fetchOperation.Fetch (autoCompleteDataSource);
+			fetchOperation.Fetch (AutoCompleteDataSource);
 
-//			[self.autoCompleteFetchQueue cancelAllOperations];
-//
-//			MLPAutoCompleteFetchOperation *fetchOperation = [[MLPAutoCompleteFetchOperation alloc]
-//				initWithDelegate:self
-//				completionsDataSource:self.autoCompleteDataSource
-//				autoCompleteTextField:self];
-//
-//			[self.autoCompleteFetchQueue addOperation:fetchOperation];
+			//			[self.autoCompleteFetchQueue cancelAllOperations];
+			//
+			//			MLPAutoCompleteFetchOperation *fetchOperation = [[MLPAutoCompleteFetchOperation alloc]
+			//				initWithDelegate:self
+			//				completionsDataSource:self.autoCompleteDataSource
+			//				autoCompleteTextField:self];
+			//
+			//			[self.autoCompleteFetchQueue addOperation:fetchOperation];
 		}
 
 

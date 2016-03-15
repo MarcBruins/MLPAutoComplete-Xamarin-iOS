@@ -18,8 +18,8 @@ namespace testapp
 			// Perform any additional setup after loading the view, typically from a nib.
 			var field = autoTextField;
 		
-			field.autoCompleteDataSource = new MyDataSource ();
-			field.autoCompleteDelegate = new autoCompleteDelegate();
+			field.AutoCompleteDataSource = new MyDataSource ();
+			field.AutoCompleteDelegate = new autoCompleteDelegate();
 
 		}
 

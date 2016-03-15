@@ -28,7 +28,7 @@ namespace MLPAutoComplete
 		{
 			this.IsCancelled = false;
 			var self = this;
-			_dataSource.AutoCompleteTextField (_textField, _textField.incompleteString, delegate(IEnumerable suggestions) {
+			_dataSource.AutoCompleteTextField (_textField, _textField.IncompleteString, delegate(IEnumerable suggestions) {
 				self.didReceiveSuggestions(suggestions.Cast<object>().ToList());
 			});
 //
