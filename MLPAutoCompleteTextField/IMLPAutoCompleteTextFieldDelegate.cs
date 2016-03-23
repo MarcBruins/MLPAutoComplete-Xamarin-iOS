@@ -8,15 +8,18 @@ namespace MLPAutoComplete
 	public interface IMLPAutoCompleteTextFieldDelegate
 	{
 
-		/* IndexPath corresponds to the order of strings within the autocomplete table, not the original data source.*/
+		/* IndexPath corresponds to the order of strings within the 
+		 * autocomplete table, not the original data source.
+		*/
 		 bool ShouldStyleAutoCompleteTableView(MLPAutoCompleteTextField AutoCompleteTextField, UITableView autoCompleteTableView, UITextBorderStyle borderStyle);
 	
 		 bool ShouldConfigureCell(MLPAutoCompleteTextField AutoCompleteTextField, UITableViewCell cell, string autoCompleteString, MLPAutoCompletionObject autoObject, NSIndexPath NSIndexPath);
 
 
-		/*IndexPath corresponds to the order of strings within the autocomplete table,
-		not the original data source.
-		 autoCompleteObject may be nil if the selectedString had no object associated with it.
+		/*
+		 * IndexPath corresponds to the order of strings within the autocomplete table,
+		 * not the original data source.
+		 * autoCompleteObject may be nil if the selectedString had no object associated with it.
 		 */
 		 void AutoCompleteTextField(MLPAutoCompleteTextField textField, String selectedString, MLPAutoCompletionObject selectedObject, NSIndexPath indexPath);
 

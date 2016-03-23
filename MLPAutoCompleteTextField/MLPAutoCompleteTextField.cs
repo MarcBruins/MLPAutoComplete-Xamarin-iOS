@@ -24,8 +24,8 @@ namespace MLPAutoComplete
 	[Register("MLPAutoCompleteTextField")]
 	public class MLPAutoCompleteTextField : UITextField, IUITableViewDataSource, IUITableViewDelegate, IMLPAutoCompleteFetchOperation, IMLPAutoCompleteSortOperation
 	{
-		public IMLPAutoCompleteTextFieldDataSource AutoCompleteDataSource;
-		public IMLPAutoCompleteTextFieldDelegate AutoCompleteDelegate;
+		private IMLPAutoCompleteTextFieldDataSource autoCompleteDataSource;
+		private IMLPAutoCompleteTextFieldDelegate autoCompleteDelegate;
 
 		const string kSortInputStringKey = "sortInputString";
 		const string kSortEditDistancesKey = "editDistances";
@@ -106,7 +106,7 @@ namespace MLPAutoComplete
 
 		public string ReuseIdentifier;
 
-		public bool DisableAutoCompleteTableUserInteractionWhileFetching = true;
+		public bool DisableAutoCompleteTableUserInteractionWhileFetching = true, ShouldSort = true;
 
 		MLPAutoCompleteFetchOperation fetchOperation;
 
@@ -135,6 +135,27 @@ namespace MLPAutoComplete
 
 
 			fetchOperation = new MLPAutoCompleteFetchOperation (this);
+		}
+
+
+		public void Setup(IMLPAutoCompleteTextFieldDataSource datasource)
+		{
+			this.autoCompleteDataSource = datasource;
+			this.autoCompleteDelegate = new DefaultAutoCompleteDelegate();
+		}
+
+		public void Setup(IMLPAutoCompleteTextFieldDataSource datasource, bool ShouldSort)
+		{
+			this.autoCompleteDataSource = datasource;
+			this.autoCompleteDelegate = new DefaultAutoCompleteDelegate();
+			this.ShouldSort = ShouldSort;
+		}
+
+		public void Setup(IMLPAutoCompleteTextFieldDataSource datasource,IMLPAutoCompleteTextFieldDelegate del,bool ShouldSort)
+		{
+			this.autoCompleteDataSource = datasource;
+			this.autoCompleteDelegate = del;
+			this.ShouldSort = ShouldSort;
 		}
 
 		public override bool BecomeFirstResponder ()
@@ -194,9 +215,9 @@ namespace MLPAutoComplete
 		[Export ("tableView:didSelectRowAtIndexPath:")]
 		public void RowSelected (UIKit.UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
-		//	if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
+			if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
 				this.closeAutoCompleteTableView ();
-		//	}
+			}
 
 			var cell = tableView.CellAt (indexPath);
 			string autoCompleteString = cell.TextLabel.Text;
@@ -204,7 +225,7 @@ namespace MLPAutoComplete
 
 			var autoCompleteObject = this.AutoCompleteSuggestions[indexPath.Row];
 			if (autoCompleteObject != null && autoCompleteObject is MLPAutoCompletionObject) {
-				this.AutoCompleteDelegate.AutoCompleteTextField (this, autoCompleteString,(MLPAutoCompletionObject) autoCompleteObject, indexPath);
+				this.autoCompleteDelegate.AutoCompleteTextField (this, autoCompleteString,(MLPAutoCompletionObject) autoCompleteObject, indexPath);
 			}
 			this.finishedSearching ();
 		}
@@ -263,19 +284,16 @@ namespace MLPAutoComplete
 			if (autoCompleteObject is MLPAutoCompletionObject) {
 				autoCompleteObject = null;
 
-				if (!(AutoCompleteDelegate.ShouldConfigureCell (this, cell, autoCompleteString, (MLPAutoCompletionObject)autoCompleteObject, indexPath)))
+				if (!(autoCompleteDelegate.ShouldConfigureCell (this, cell, autoCompleteString, (MLPAutoCompletionObject)autoCompleteObject, indexPath)))
 				{
 					return;
 				}
 			}
 
-
-
 			cell.TextLabel.TextColor = this.TextColor;
 			cell.TextLabel.Font = this.Font;
 
 			cell.TextLabel.Text = autoCompleteString;
-
 
 			//TODO
 			//
@@ -351,7 +369,7 @@ namespace MLPAutoComplete
 				this.AutoCompleteTableView.Alpha = 1;
 				var tableViewWillBeAddedToViewHierarchy = this.AutoCompleteTableView.Superview  == null ? true : false;
 				if (tableViewWillBeAddedToViewHierarchy) {
-					AutoCompleteDelegate.WillShowAutoCompleteTableView (this, AutoCompleteTableView);
+					autoCompleteDelegate.WillShowAutoCompleteTableView (this, AutoCompleteTableView);
 
 				}
 
@@ -366,7 +384,7 @@ namespace MLPAutoComplete
 					this.Layer.ShadowOpacity = 0.35f;
 				}
 				if (tableViewWillBeAddedToViewHierarchy) {
-					AutoCompleteDelegate.DidShowAutoCompleteTableView (this, AutoCompleteTableView);
+					autoCompleteDelegate.DidShowAutoCompleteTableView (this, AutoCompleteTableView);
 				} 
 
 			}else {
@@ -424,12 +442,12 @@ namespace MLPAutoComplete
 		void closeAutoCompleteTableView()
 		{
 
-			AutoCompleteDelegate.WillHideAutoCompleteTableView (this, AutoCompleteTableView);
+			autoCompleteDelegate.WillHideAutoCompleteTableView (this, AutoCompleteTableView);
 
 			this.AutoCompleteTableView.RemoveFromSuperview ();
 			this.restoreOriginalShadowProperties ();
 
-			AutoCompleteDelegate.DidHideAutoCompleteTableView (this, AutoCompleteTableView);
+			autoCompleteDelegate.DidHideAutoCompleteTableView (this, AutoCompleteTableView);
 
 		}
 
@@ -608,8 +626,8 @@ namespace MLPAutoComplete
 		void styleAutoCompleteTableForBorderStyle(UITextBorderStyle borderStyle)
 		{
 
-			if(AutoCompleteDelegate != null)
-			if(!(this.AutoCompleteDelegate.ShouldStyleAutoCompleteTableView(this,AutoCompleteTableView,borderStyle)))
+			if(autoCompleteDelegate != null)
+			if(!(this.autoCompleteDelegate.ShouldStyleAutoCompleteTableView(this,AutoCompleteTableView,borderStyle)))
 				return;
 
 
@@ -692,7 +710,7 @@ namespace MLPAutoComplete
 
 			//this.AutoCompleteFetchQueue.Cancel ();
 
-			fetchOperation.Fetch (AutoCompleteDataSource);
+			fetchOperation.Fetch (autoCompleteDataSource);
 
 			//			[self.autoCompleteFetchQueue cancelAllOperations];
 			//

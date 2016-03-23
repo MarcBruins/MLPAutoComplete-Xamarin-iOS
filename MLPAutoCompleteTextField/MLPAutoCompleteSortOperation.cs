@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MLPAutoComplete
 {
@@ -15,8 +16,9 @@ namespace MLPAutoComplete
 
 		public List<Object> Sort(string inputString, List<Object> completions)
 		{
-			if (String.IsNullOrEmpty (inputString)) 
+			if (String.IsNullOrEmpty (inputString)) { 
 				return completions;
+			}
 
 			List<Object> editDistances = new List<Object> ();
 			int maximumEditDistance = _textField.MaximumEditDistance;
@@ -35,41 +37,39 @@ namespace MLPAutoComplete
 				int maxRange = (inputString.Length < currentString.Length) ? inputString.Length : currentString.Length;
 				int editDistanceOfCurrentString = LevenshteinDistance.Compute (inputString, currentString);
 
-				if (editDistanceOfCurrentString < maximumEditDistance) {
+				if (editDistanceOfCurrentString < maxRange) {
 					break;
 				}
 
 				Dictionary<string,Object> ds = new Dictionary<string,Object>  ();
-				editDistances.Add (completion);
+				ds.Add("key",currentString);
+				ds.Add("key2", completion);
+				ds.Add("key3", editDistanceOfCurrentString);
 
-				//editDistances.Add(
-			}
+				editDistances.Add (ds);
+
+				Func<string, IEnumerable<string>> indexSelector = n => new string[] {
+					n,
+					n
+				};
+
+				//editDistances.OrderBy (indexSelector);
+
+
+
+				List<string> otherSuggestions,prioritySuggestions = new List<string> ();
+
+				foreach(var stringWithEditDistances in editDistances)
+				{
+				//	Object autoCompleteObject = stringWithEditDistances ["kSortObjectKey"];
+				//	string suggestedString = stringWithEditDistances ["kSortInputStringKey"];
+
+					//var suggestedStringComponents = suggestedString.
+
+				}
 
 			return editDistances;
-//		
-//
-//				NSMutableArray *editDistances = [NSMutableArray arrayWithCapacity:possibleTerms.count];
-//
-//				NSInteger maxEditDistance = self.delegate.maximumEditDistanceForAutoCompleteTerms;
-//
-//				for(NSObject *originalObject in possibleTerms) {
-//
-//					if(self.isCancelled){
-//						return [NSArray array];
-//					}
-//
-//					NSUInteger maximumRange = (inputString.length < currentString.length) ? inputString.length : currentString.length;
-//					float editDistanceOfCurrentString = [inputString asciiLevenshteinDistanceWithString:[currentString substringWithRange:NSMakeRange(0, maximumRange)]];
-//
-//					if(editDistanceOfCurrentString > maxEditDistance){
-//						continue;
-//					}
-//
-//					NSDictionary * stringsWithEditDistances = @{kSortInputStringKey : currentString ,
-//						kSortObjectKey : originalObject,
-//						kSortEditDistancesKey : [NSNumber numberWithFloat:editDistanceOfCurrentString]};
-//					[editDistances addObject:stringsWithEditDistances];
-//				}
+
 //
 //				if(self.isCancelled){
 //					return [NSArray array];
@@ -126,8 +126,8 @@ namespace MLPAutoComplete
 //
 //
 //				return [NSArray arrayWithArray:results];
-//			}
+			}
+			return null;
 		}
 	}
 }
-
