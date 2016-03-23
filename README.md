@@ -8,6 +8,8 @@ Feel free to contact me or to just contribute to make this project production re
 
 ### Step 1 Register your UITextField base class as MLPAutoCompleteTextField
 
+You can do this in the interface builder
+
 ### Step 2 Create a custom datasource
 
 * this one uses a google location api
