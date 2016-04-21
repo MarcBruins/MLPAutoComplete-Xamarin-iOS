@@ -22,7 +22,7 @@ namespace MLPAutoComplete
 		 that could be used as possible completions for the given string in textField.
 		This method will be called asynchronously, so an immediate return is not necessary.
 		 */
-		Task<string[]> AutoCompleteTextField(MLPAutoCompleteTextField textField, string possibleCompletionsForString);
+		//Task<string[]> AutoCompleteTextField(MLPAutoCompleteTextField textField, string possibleCompletionsForString);
 
 	}
 }
