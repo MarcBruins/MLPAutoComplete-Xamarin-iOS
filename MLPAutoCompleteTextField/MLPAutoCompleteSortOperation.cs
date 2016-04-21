@@ -55,18 +55,38 @@ namespace MLPAutoComplete
 				return first.CompareTo(second);
 			});
 
-				List<string> otherSuggestions,prioritySuggestions = new List<string> ();
+			List<Object> otherSuggestions = new List<Object> ();
+			List<Object> prioritySuggestions = new List<Object> ();
 
-				foreach(var stringWithEditDistances in editDistances)
-				{
-				//	Object autoCompleteObject = stringWithEditDistances ["kSortObjectKey"];
-				//	string suggestedString = stringWithEditDistances ["kSortInputStringKey"];
+			foreach(var stringWithEditDistances in editDistances)
+			{
+				Object autoCompleteObject = stringWithEditDistances [1];
+				string suggestedString = (string)stringWithEditDistances [2];
 
-					//var suggestedStringComponents = suggestedString.
+				var suggestedStringComponents = suggestedString.Split (null);
+				bool suggestedStringDeservesPriority = false;
 
+				foreach (var component in suggestedStringComponents) {
+
+					if(inputString.Length != 0 && (component.ToLower ().IndexOf(inputString.ToLower ()) == 0)){
+						suggestedStringDeservesPriority = true;
+						prioritySuggestions.Add (autoCompleteObject);
+						break;
+					}
+
+					if (inputString.Length <= 1)
+						break;
 				}
 
-			return new List<Object>(){"test"};
+				if (!suggestedStringDeservesPriority)
+					otherSuggestions.Add (autoCompleteObject);
+
+			}
+
+			var result = new List<Object>();
+			result.AddRange (prioritySuggestions);
+			result.AddRange (otherSuggestions);
+			return result;
 
 //
 //				if(self.isCancelled){
