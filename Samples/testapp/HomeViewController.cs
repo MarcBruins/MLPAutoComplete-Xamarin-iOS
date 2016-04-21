@@ -18,7 +18,7 @@ namespace testapp
 			// Perform any additional setup after loading the view, typically from a nib.
 			var field = autoTextField;
 		
-			field.Setup (new MyDataSource ());
+			field.Setup (new MyDataSource (),true);
 
 		}
 
