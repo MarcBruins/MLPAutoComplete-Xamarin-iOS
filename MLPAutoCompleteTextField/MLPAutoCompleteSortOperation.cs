@@ -20,7 +20,7 @@ namespace MLPAutoComplete
 				return completions;
 			}
 
-			List<Object> editDistances = new List<Object> ();
+			List<Dictionary<int,Object>> editDistances = new List<Dictionary<int,Object>> ();
 			int maximumEditDistance = _textField.MaximumEditDistance;
 
 			foreach (var completion in completions) {
@@ -37,25 +37,23 @@ namespace MLPAutoComplete
 				int maxRange = (inputString.Length < currentString.Length) ? inputString.Length : currentString.Length;
 				int editDistanceOfCurrentString = LevenshteinDistance.Compute (inputString, currentString);
 
-				if (editDistanceOfCurrentString < maxRange) {
+				if (editDistanceOfCurrentString < maxRange) { 
 					break;
 				}
 
-				Dictionary<string,Object> ds = new Dictionary<string,Object>  ();
-				ds.Add("key",currentString);
-				ds.Add("key2", completion);
-				ds.Add("key3", editDistanceOfCurrentString);
+				Dictionary<int,Object> stringsWithEditDistances = new Dictionary<int,Object>  ();
+				stringsWithEditDistances.Add(1,currentString);
+				stringsWithEditDistances.Add(2, completion);
+				stringsWithEditDistances.Add(3, editDistanceOfCurrentString);
 
-				editDistances.Add (ds);
-
-				Func<string, IEnumerable<string>> indexSelector = n => new string[] {
-					n,
-					n
-				};
-
-				//editDistances.OrderBy (indexSelector);
-
-
+				editDistances.Add (stringsWithEditDistances);
+			}
+				
+			editDistances.Sort ((Dictionary<int, object> x, Dictionary<int, object> y) => {
+				var first = (int) x[3];
+				var second = (int) y[3];
+				return first.CompareTo(second);
+			});
 
 				List<string> otherSuggestions,prioritySuggestions = new List<string> ();
 
@@ -68,7 +66,7 @@ namespace MLPAutoComplete
 
 				}
 
-			return editDistances;
+			return new List<Object>(){"test"};
 
 //
 //				if(self.isCancelled){
@@ -126,7 +124,7 @@ namespace MLPAutoComplete
 //
 //
 //				return [NSArray arrayWithArray:results];
-			}
+			
 			return null;
 		}
 	}
