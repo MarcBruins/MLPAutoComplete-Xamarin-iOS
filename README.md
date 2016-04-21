@@ -57,7 +57,7 @@ public class MyDataSource : IMLPAutoCompleteTextFieldDataSource
 var field = autoTextField;
 field.Setup (new MyDataSource ());
 ```	
-If you want to use the alghoritm set second parameter to true
+If you want to use the sorting alghoritm set second parameter to true
 
 ```sh
 var field = autoTextField;
