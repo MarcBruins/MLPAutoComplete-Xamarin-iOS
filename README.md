@@ -59,9 +59,17 @@ public class MyDataSource : IMLPAutoCompleteTextFieldDataSource
 
 
 ### Step 3 Call setup method
+
+
 ```sh
 var field = autoTextField;
-field.Setup (new MyDataSource (), false);
+field.Setup (new MyDataSource ());
+```	
+If you want to use the alghoritm set second parameter to true
+
+```sh
+var field = autoTextField;
+field.Setup (new MyDataSource (), true);
 ```	
 
 
