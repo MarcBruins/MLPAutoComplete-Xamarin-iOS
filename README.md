@@ -69,7 +69,7 @@ If you want to use the alghoritm set second parameter to true
 
 ```sh
 var field = autoTextField;
-field.Setup (new MyDataSource (), false);
+field.Setup (new MyDataSource (), true);
 ```	
 
 
