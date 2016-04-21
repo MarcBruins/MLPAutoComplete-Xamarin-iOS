@@ -6,6 +6,7 @@ using Foundation;
 using ObjCRuntime;
 using System.Collections;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace MLPAutoComplete
 {
@@ -252,7 +253,7 @@ namespace MLPAutoComplete
 				cell = tableView.DequeueReusableCell(this.ReuseIdentifier);
 			}	
 			if (cell == null) {
-				Console.WriteLine ("Unable to create cell for autocomplete table");
+				Debug.WriteLine ("Unable to create cell for autocomplete table");
 			}
 
 			var autoCompleteObject = this.AutoCompleteSuggestions [indexPath.Row];
@@ -263,7 +264,7 @@ namespace MLPAutoComplete
 			} else if (autoCompleteObject is MLPAutoCompletionObject) {
 				suggestedString = ((MLPAutoCompletionObject)autoCompleteObject).AutocompleteString;
 			} else {
-				Console.WriteLine ("Unable to create cell for autocomplete table");
+				Debug.WriteLine ("Unable to create cell for autocomplete table");
 			}
 
 			this.configureCell (cell, indexPath, suggestedString);
@@ -340,7 +341,7 @@ namespace MLPAutoComplete
 		void expandAutoCompleteTableViewForNumberOfRows(int numberOfRows)
 		{
 			if (numberOfRows <= 0)
-				Console.WriteLine ("Number of rows given for auto complete table was negative, this is impossible.");
+				Debug.WriteLine ("Number of rows given for auto complete table was negative, this is impossible.");
 
 			if (!this.IsFirstResponder)
 				return;
@@ -583,7 +584,7 @@ namespace MLPAutoComplete
 		void registerAutoCompleteCellNib(UINib nib, string reuseIdentifier)
 		{
 			if (this.AutoCompleteTableView == null) {
-				Console.WriteLine ("Must have an autoCompleteTableView to register cells to.");
+				Debug.WriteLine ("Must have an autoCompleteTableView to register cells to.");
 				return;
 			}
 
@@ -599,7 +600,7 @@ namespace MLPAutoComplete
 		void registerAutoCompleteCellClass(Type cellClass, string reuseIdentifier)
 		{
 			if (this.AutoCompleteTableView == null) {
-				Console.WriteLine ("Must have an autoCompleteTableView to register cells to.");
+				Debug.WriteLine ("Must have an autoCompleteTableView to register cells to.");
 				return;
 			}
 			if (!String.IsNullOrEmpty (reuseIdentifier)) {
@@ -609,7 +610,7 @@ namespace MLPAutoComplete
 
 			var classSettingSupported = this.AutoCompleteTableView.RespondsToSelector (new Selector ("registerClass:forCellReuseIdentifier:"));
 			if (classSettingSupported) {
-				Console.WriteLine ("Unable to set class for cell for autocomplete table, in iOS 5.0 you can set a custom NIB for a reuse identifier to get similar functionality.");
+				Debug.WriteLine ("Unable to set class for cell for autocomplete table, in iOS 5.0 you can set a custom NIB for a reuse identifier to get similar functionality.");
 			}
 
 			AutoCompleteTableView.RegisterClassForCellReuse (cellClass, reuseIdentifier);

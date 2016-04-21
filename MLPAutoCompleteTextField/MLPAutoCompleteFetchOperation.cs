@@ -77,7 +77,7 @@ namespace MLPAutoComplete
 				if (suggestions.Count > 0) {
 					var firstObject = suggestions[0];
 					if (!(firstObject is string || firstObject is MLPAutoCompletionObject))
-						Console.WriteLine ("MLPAutoCompleteTextField expects an array with objects that are either strings or conform to the MLPAutoCompletionObject protocol for possible completions.");
+						Debug.WriteLine ("MLPAutoCompleteTextField expects an array with objects that are either strings or conform to the MLPAutoCompletionObject protocol for possible completions.");
 
 					autoCompleteTermsDidFetch (_textField.Text,suggestions);
 				}

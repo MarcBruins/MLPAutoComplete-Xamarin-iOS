@@ -1,5 +1,6 @@
 ﻿using System;
 using UIKit;
+using System.Diagnostics;
 
 namespace MLPAutoComplete
 {
@@ -17,27 +18,27 @@ namespace MLPAutoComplete
 		}
 		public void AutoCompleteTextField (MLPAutoCompleteTextField textField, string selectedString, MLPAutoCompletionObject selectedObject, Foundation.NSIndexPath indexPath)
 		{
-			Console.WriteLine ("AutoCompleteTextField method called in delegate");
+			Debug.WriteLine ("AutoCompleteTextField method called in delegate");
 		}
 		public void WillShowAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 		{
-			Console.WriteLine ("Autocomplete table view will be added to the view hierarchy");
+			Debug.WriteLine ("Autocomplete table view will be added to the view hierarchy");
 		}
 		public void DidShowAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 		{
-			Console.WriteLine ("Autocomplete table view is showing from the view hierarchy");
+			Debug.WriteLine ("Autocomplete table view is showing from the view hierarchy");
 		}
 		public void WillHideAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 		{
-			Console.WriteLine ("Autocomplete table view will be removed from the view hierarchy");
+			Debug.WriteLine ("Autocomplete table view will be removed from the view hierarchy");
 		}
 		public void DidHideAutoCompleteTableView (MLPAutoCompleteTextField textField, UITableView autoCompleteTableView)
 		{
-			Console.WriteLine ("Autocomplete table view is removed from the view hierarchy");
+			Debug.WriteLine ("Autocomplete table view is removed from the view hierarchy");
 		}
 		public void DidChangeNumberOfSuggestions (MLPAutoCompleteTextField textField, int numberOfSuggestions)
 		{
-			Console.WriteLine ("Did change number of suggestions");
+			Debug.WriteLine ("Did change number of suggestions");
 		}
 		#endregion
 	}

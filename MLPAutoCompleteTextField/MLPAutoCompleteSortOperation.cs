@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Diagnostics;
 
 namespace MLPAutoComplete
 {
@@ -31,7 +32,7 @@ namespace MLPAutoComplete
 				} else if (completion is MLPAutoCompletionObject) {
 					currentString = ((MLPAutoCompletionObject)completion).AutocompleteString;
 				} else {
-					Console.WriteLine ("Autocompletion terms must either be strings or objects conforming to the MLPAutoCompleteObject protocol.");
+					Debug.WriteLine ("Autocompletion terms must either be strings or objects conforming to the MLPAutoCompleteObject protocol.");
 				}
 
 				int maxRange = (inputString.Length < currentString.Length) ? inputString.Length : currentString.Length;
@@ -42,7 +43,7 @@ namespace MLPAutoComplete
 				}
 
 				Dictionary<int,Object> stringsWithEditDistances = new Dictionary<int,Object>  ();
-				stringsWithEditDistances.Add(1,currentString);
+				stringsWithEditDistances.Add(1, currentString);
 				stringsWithEditDistances.Add(2, completion);
 				stringsWithEditDistances.Add(3, editDistanceOfCurrentString);
 
