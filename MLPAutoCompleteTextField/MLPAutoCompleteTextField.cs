@@ -752,7 +752,6 @@ namespace MLPAutoComplete
 		{
 			this.ClipsToBounds = false;
 			//this.AutoCompleteFetchRequestDelay = DefaultAutoCompleteRequestDelay;
-			this.SortAutoCompleteSuggestionsByClosestMatch = false;
 			this.ApplyBoldEffectToAutoCompleteSuggestions = true;
 			this.ShowTextFieldDropShadowWhenAutoCompleteTableIsOpen = true;
 			this.ShouldResignFirstResponderFromKeyboardAfterSelectionOfAutoCompleteRows = true;
