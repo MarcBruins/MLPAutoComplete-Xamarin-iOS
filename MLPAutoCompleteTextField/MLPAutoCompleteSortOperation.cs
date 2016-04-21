@@ -37,8 +37,8 @@ namespace MLPAutoComplete
 				int maxRange = (inputString.Length < currentString.Length) ? inputString.Length : currentString.Length;
 				int editDistanceOfCurrentString = LevenshteinDistance.Compute (inputString, currentString);
 
-				if (editDistanceOfCurrentString < maxRange) { 
-					break;
+				if (editDistanceOfCurrentString > maxRange) { 
+					continue;
 				}
 
 				Dictionary<int,Object> stringsWithEditDistances = new Dictionary<int,Object>  ();
@@ -87,65 +87,6 @@ namespace MLPAutoComplete
 			result.AddRange (prioritySuggestions);
 			result.AddRange (otherSuggestions);
 			return result;
-
-//
-//				if(self.isCancelled){
-//					return [NSArray array];
-//				}
-//
-//				[editDistances sortUsingComparator:^(NSDictionary *string1Dictionary,
-//					NSDictionary *string2Dictionary){
-//
-//					return [string1Dictionary[kSortEditDistancesKey]
-//						compare:string2Dictionary[kSortEditDistancesKey]];
-//
-//				}];
-//
-//
-//
-//				NSMutableArray *prioritySuggestions = [NSMutableArray array];
-//				NSMutableArray *otherSuggestions = [NSMutableArray array];
-//				for(NSDictionary *stringsWithEditDistances in editDistances){
-//
-//					if(self.isCancelled){
-//						return [NSArray array];
-//					}
-//
-//					NSObject *autoCompleteObject = stringsWithEditDistances[kSortObjectKey];
-//					NSString *suggestedString = stringsWithEditDistances[kSortInputStringKey];
-//
-//					NSArray *suggestedStringComponents = [suggestedString componentsSeparatedByString:@" "];
-//					BOOL suggestedStringDeservesPriority = NO;
-//					for(NSString *component in suggestedStringComponents){
-//						NSRange occurrenceOfInputString = [[component lowercaseString]
-//							rangeOfString:[inputString lowercaseString]];
-//
-//						if (occurrenceOfInputString.length != 0 && occurrenceOfInputString.location == 0) {
-//							suggestedStringDeservesPriority = YES;
-//							[prioritySuggestions addObject:autoCompleteObject];
-//							break;
-//						}
-//
-//						if([inputString length] <= 1){
-//							//if the input string is very short, don't check anymore components of the input string.
-//							break;
-//						}
-//					}
-//
-//					if(!suggestedStringDeservesPriority){
-//						[otherSuggestions addObject:autoCompleteObject];
-//					}
-//
-//				}
-//
-//				NSMutableArray *results = [NSMutableArray array];
-//				[results addObjectsFromArray:prioritySuggestions];
-//				[results addObjectsFromArray:otherSuggestions];
-//
-//
-//				return [NSArray arrayWithArray:results];
-			
-			return null;
 		}
 	}
 }
