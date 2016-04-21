@@ -269,10 +269,6 @@ namespace testapp
 			completionHandler (countries);
 		}
 
-		public async Task<string[]> AutoCompleteTextField (MLPAutoComplete.MLPAutoCompleteTextField textField, string possibleCompletionsForString)
-		{
-			throw new NotImplementedException ();
-		}
 		#endregion
 	}
 }

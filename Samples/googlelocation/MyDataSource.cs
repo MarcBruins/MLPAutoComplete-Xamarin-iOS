@@ -21,10 +21,6 @@ namespace googlelocation
 			completionHandler (strings);
 		}
 
-		public async Task<string[]> AutoCompleteTextField (MLPAutoCompleteTextField textField, string possibleCompletionsForString)
-		{
-			throw new NotImplementedException ();
-		}
 		#endregion
 	}
 }
