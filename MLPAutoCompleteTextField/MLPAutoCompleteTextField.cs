@@ -107,7 +107,7 @@ namespace MLPAutoComplete
 
 		public string ReuseIdentifier;
 
-		public bool DisableAutoCompleteTableUserInteractionWhileFetching = true, ShouldSort = true;
+		public bool DisableAutoCompleteTableUserInteractionWhileFetching = true, ShouldSort = false;
 
 		MLPAutoCompleteFetchOperation fetchOperation;
 
