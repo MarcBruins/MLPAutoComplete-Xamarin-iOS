@@ -93,7 +93,7 @@ namespace MLPAutoComplete
 
 			//_textField.AutoCompleteSortQueue.IsCancelled = true;
 
-			if (!_textField.SortAutoCompleteSuggestionsByClosestMatch) {
+			if (_textField.ShouldSort) {
 				var result = sortOperation.Sort (inputString, completions);
 				autoCompleteTermsDidSort (result);
 			} else {

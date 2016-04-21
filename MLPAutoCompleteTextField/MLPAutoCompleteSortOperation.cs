@@ -21,7 +21,6 @@ namespace MLPAutoComplete
 			}
 
 			List<Dictionary<int,Object>> editDistances = new List<Dictionary<int,Object>> ();
-			int maximumEditDistance = _textField.MaximumEditDistance;
 
 			foreach (var completion in completions) {
 
