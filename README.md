@@ -26,11 +26,7 @@ public class MyDataSource : IMLPAutoCompleteTextFieldDataSource
     var strings = result.Select (rs => rs.description).ToList ();
     completionHandler (strings);
   }
-  
-  public async Task<string[]> AutoCompleteTextField (MLPAutoCompleteTextField textField, string possibleCompletionsForString)
-  {
-    throw new NotImplementedException ();
-  }
+
 #endregion
 }
 ```	
@@ -48,10 +44,6 @@ public class MyDataSource : IMLPAutoCompleteTextFieldDataSource
     completionHandler (countries);
   }
   
-  public async Task<string[]> AutoCompleteTextField (MLPAutoComplete.MLPAutoCompleteTextField textField, string possibleCompletionsForString)
-  {
-    throw new NotImplementedException ();
-  }
   #endregion
 }
 ```	
@@ -65,7 +57,7 @@ public class MyDataSource : IMLPAutoCompleteTextFieldDataSource
 var field = autoTextField;
 field.Setup (new MyDataSource ());
 ```	
-If you want to use the alghoritm set second parameter to true
+If you want to use the sorting alghoritm set second parameter to true
 
 ```sh
 var field = autoTextField;
