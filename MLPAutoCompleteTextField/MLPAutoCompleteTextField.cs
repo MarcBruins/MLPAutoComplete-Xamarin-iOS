@@ -169,7 +169,7 @@ namespace MLPAutoComplete
 		{
 			saveCurrentShadowProperties ();
 
-			if (autoCompleteTableAppearsAsKeyboardAccessory) 
+			if (AutoCompleteTableAppearsAsKeyboardAccessory) 
 				this.setAutoCompleteTableBackgroundColor (this.BackgroundColor);
 
 			return base.BecomeFirstResponder();
@@ -375,7 +375,6 @@ namespace MLPAutoComplete
 				var tableViewWillBeAddedToViewHierarchy = this.AutoCompleteTableView.Superview  == null ? true : false;
 				if (tableViewWillBeAddedToViewHierarchy) {
 					autoCompleteDelegate.WillShowAutoCompleteTableView (this, AutoCompleteTableView);
-
 				}
 
 				UIView rootView = Window.Subviews[0];
