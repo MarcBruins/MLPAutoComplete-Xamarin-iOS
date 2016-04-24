@@ -14,7 +14,6 @@ namespace MLPAutoComplete
 	{
 		void AutoCompleteTermsDidSort(string[] completions);
 		int MaximumEditDistanceForAutoCompleteTerms(); //not sure
-
 	}
 
 	interface IMLPAutoCompleteFetchOperation
@@ -28,9 +27,6 @@ namespace MLPAutoComplete
 		private IMLPAutoCompleteTextFieldDataSource autoCompleteDataSource;
 		private IMLPAutoCompleteTextFieldDelegate autoCompleteDelegate;
 
-		const string kSortInputStringKey = "sortInputString";
-		const string kSortEditDistancesKey = "editDistances";
-		const string kSortObjectKey = "sortObject";
 		const string kKeyboardAccessoryInputKeyPath = "autoCompleteTableAppearsAsKeyboardAccessory";
 		const double DefaultAutoCompleteRequestDelay = 0.1;
 
@@ -62,6 +58,17 @@ namespace MLPAutoComplete
 			get{ return _kDefaultAutoCompleteCellIdentifier; }
 			set{ _kDefaultAutoCompleteCellIdentifier = value; Observe (_kDefaultAutoCompleteCellIdentifier);}
 		}
+
+		private bool autoCompleteTableAppearsAsKeyboardAccessory = false;
+		public bool AutoCompleteTableAppearsAsKeyboardAccessory
+		{
+			get{ return autoCompleteTableAppearsAsKeyboardAccessory;}
+			set{
+				autoCompleteTableAppearsAsKeyboardAccessory = value;
+				Observe (kKeyboardAccessoryInputKeyPath); //trigger for updating the tableview
+			}
+		}
+
 
 		public string IncompleteString {get;set;}
 		private string[] possibleCompletions{ get; set; }
@@ -99,11 +106,11 @@ namespace MLPAutoComplete
 		private CGColor originalShadowColor;
 		private CGSize originalShadowOffset;
 		private float originalShadowOpacity;
+		private bool autoCompleteTableViewHidden = false;
 
 		public UITableView AutoCompleteTableView;
 
-		public bool AutoCompleteTableAppearsAsKeyboardAccessory;
-		private bool autoCompleteTableViewHidden;
+
 
 		public string ReuseIdentifier;
 
@@ -147,26 +154,23 @@ namespace MLPAutoComplete
 
 		public void Setup(IMLPAutoCompleteTextFieldDataSource datasource, bool ShouldSort)
 		{
-			this.autoCompleteDataSource = datasource;
-			this.autoCompleteDelegate = new DefaultAutoCompleteDelegate();
+			Setup (datasource);
 			this.ShouldSort = ShouldSort;
 		}
 
 		public void Setup(IMLPAutoCompleteTextFieldDataSource datasource,IMLPAutoCompleteTextFieldDelegate del,bool ShouldSort)
 		{
-			this.autoCompleteDataSource = datasource;
+			Setup (datasource, ShouldSort);
 			this.autoCompleteDelegate = del;
-			this.ShouldSort = ShouldSort;
 		}
+
 
 		public override bool BecomeFirstResponder ()
 		{
 			saveCurrentShadowProperties ();
 
-			if (AutoCompleteTableAppearsAsKeyboardAccessory) 
-			{
+			if (autoCompleteTableAppearsAsKeyboardAccessory) 
 				this.setAutoCompleteTableBackgroundColor (this.BackgroundColor);
-			}
 
 			return base.BecomeFirstResponder();
 		}
@@ -216,7 +220,7 @@ namespace MLPAutoComplete
 		[Export ("tableView:didSelectRowAtIndexPath:")]
 		public void RowSelected (UIKit.UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
-			if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
+			if (this.autoCompleteTableAppearsAsKeyboardAccessory) {
 				this.closeAutoCompleteTableView ();
 			}
 
@@ -346,7 +350,7 @@ namespace MLPAutoComplete
 			if (!this.IsFirstResponder)
 				return;
 
-			if (this.AutoCompleteTableAppearsAsKeyboardAccessory)
+			if (this.autoCompleteTableAppearsAsKeyboardAccessory)
 				this.expandKeyboardAutoCompleteTableForNumberOfRows (numberOfRows);
 			else
 				this.expandDropDownAutoCompleteTableForNumberOfRows (numberOfRows);
@@ -354,7 +358,7 @@ namespace MLPAutoComplete
 
 		void expandKeyboardAutoCompleteTableForNumberOfRows(int numberOfRows)
 		{
-			if(numberOfRows > 0 && (this.autoCompleteTableViewHidden == false)){
+			if(numberOfRows > 0 && !this.autoCompleteTableViewHidden){
 				this.AutoCompleteTableView.Alpha = 1;
 			} else {
 				this.AutoCompleteTableView.Alpha = 0;
@@ -432,7 +436,7 @@ namespace MLPAutoComplete
 			} else if (keyPath.Equals (kBackgroundColorKeyPath)) {
 				styleAutoCompleteTableForBorderStyle (this.BorderStyle);
 			} else if (keyPath.Equals (kKeyboardAccessoryInputKeyPath)) {
-				if (this.AutoCompleteTableAppearsAsKeyboardAccessory) {
+				if (this.autoCompleteTableAppearsAsKeyboardAccessory) {
 					this.setAutoCompleteTableForKeyboardAppearance ();
 				} else {
 					this.setAutoCompleteTableForDropDownAppearance ();
@@ -466,7 +470,7 @@ namespace MLPAutoComplete
 			this.Layer.ShadowOpacity = this.originalShadowOpacity;
 		}
 
-		void setAutoCompleteTableForKeyboardAppearance()
+		private void setAutoCompleteTableForKeyboardAppearance()
 		{	
 			this.resetKeyboardAutoCompleteTableFrameForNumberOfRows (this.MaximumNumberOfAutoCompleteRows);
 			this.AutoCompleteTableView.ContentInset = UIEdgeInsets.Zero;
@@ -534,12 +538,14 @@ namespace MLPAutoComplete
 			//			}
 			//
 			//			return newTableViewFrame;
+
+
 			CGRect newTableViewFrame = autoCompleteTableViewFrameForTextField(textField);
 			nfloat textfieldTopInset = textField.AutoCompleteTableView.ContentInset.Top;
 			nfloat height = this.autoCompleteTableHeightForTextField(textField, numberOfRows);
 
 			newTableViewFrame.Height = height;
-			if(!textField.AutoCompleteTableAppearsAsKeyboardAccessory){
+			if(!textField.autoCompleteTableAppearsAsKeyboardAccessory){
 				newTableViewFrame.Height += textfieldTopInset;
 			}
 			return newTableViewFrame;
