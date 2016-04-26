@@ -472,6 +472,7 @@ namespace MLPAutoComplete
 		private void setAutoCompleteTableForKeyboardAppearance()
 		{	
 			this.resetKeyboardAutoCompleteTableFrameForNumberOfRows (this.MaximumNumberOfAutoCompleteRows);
+
 			this.AutoCompleteTableView.ContentInset = UIEdgeInsets.Zero;
 			this.AutoCompleteTableView.ScrollIndicatorInsets = UIEdgeInsets.Zero;
 			this.InputAccessoryView = this.AutoCompleteTableView;
@@ -495,6 +496,8 @@ namespace MLPAutoComplete
 
 			this.AutoCompleteTableView.AutoresizingMask = UIViewAutoresizing.FlexibleWidth;
 			this.AutoCompleteTableView.ScrollRectToVisible (new CGRect(0,0,1,1), false);
+
+			this.AutoCompleteTableView.Bounces = true;
 		}
 
 		void resetDropDownAutoCompleteTableFrameForNumberOfRows(int numberOfRows)
