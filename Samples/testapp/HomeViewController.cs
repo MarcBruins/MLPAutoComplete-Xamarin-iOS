@@ -19,7 +19,7 @@ namespace testapp
 			var field = autoTextField;
 		
 			field.Setup (new MyDataSource (),true);
-			field.AutoCompleteTableAppearsAsKeyboardAccessory = true;
+			//field.AutoCompleteTableAppearsAsKeyboardAccessory = true;
 		}
 
 		public override void DidReceiveMemoryWarning ()

@@ -445,14 +445,12 @@ namespace MLPAutoComplete
 
 		void closeAutoCompleteTableView()
 		{
-
 			autoCompleteDelegate.WillHideAutoCompleteTableView (this, AutoCompleteTableView);
 
 			this.AutoCompleteTableView.RemoveFromSuperview ();
 			this.restoreOriginalShadowProperties ();
 
 			autoCompleteDelegate.DidHideAutoCompleteTableView (this, AutoCompleteTableView);
-
 		}
 
 		void saveCurrentShadowProperties()
