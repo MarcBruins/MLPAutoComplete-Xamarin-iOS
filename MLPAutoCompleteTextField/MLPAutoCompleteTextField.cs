@@ -10,19 +10,8 @@ using System.Diagnostics;
 
 namespace MLPAutoComplete
 {
-	interface IMLPAutoCompleteSortOperation
-	{
-		void AutoCompleteTermsDidSort(string[] completions);
-		int MaximumEditDistanceForAutoCompleteTerms(); //not sure
-	}
-
-	interface IMLPAutoCompleteFetchOperation
-	{
-		void AutoCompleteTermsDidFetch(Dictionary<string, bool> fetchInfo);
-	}
-
 	[Register("MLPAutoCompleteTextField")]
-	public class MLPAutoCompleteTextField : UITextField, IUITableViewDataSource, IUITableViewDelegate, IMLPAutoCompleteFetchOperation, IMLPAutoCompleteSortOperation
+	public class MLPAutoCompleteTextField : UITextField, IUITableViewDataSource, IUITableViewDelegate
 	{
 		private IMLPAutoCompleteTextFieldDataSource autoCompleteDataSource;
 		private IMLPAutoCompleteTextFieldDelegate autoCompleteDelegate;
@@ -69,8 +58,7 @@ namespace MLPAutoComplete
 			}
 		}
 
-		public string IncompleteString {get;set;}
-		private string[] possibleCompletions{ get; set; }
+		public string IncompleteString { get; internal set; }
 
 		public bool SortAutoCompleteSuggestionsByClosestMatch = false;
 		public bool ApplyBoldEffectToAutoCompleteSuggestions = false;
@@ -88,8 +76,6 @@ namespace MLPAutoComplete
 		public NSTimer AutoCompleteFetchRequestDelay;
 		public IList AutoCompleteSuggestions = new List<Object>();
 
-		public NSOperation AutoCompleteSortQueue,AutoCompleteFetchQueue;
-
 		public CGRect AutoCompleteTableFrame;
 		public CGSize AutoCompleteTableOriginOffset;
 		public CGSize AutoCompleteTableSizeOffset;
@@ -100,7 +86,6 @@ namespace MLPAutoComplete
 		public float AutoCompleteTableBorderWidth;
 		public UIColor AutoCompleteTableBackgroundColor;
 		public UIColor AutoCompleteTableCellTextColor;
-
 
 		private CGColor originalShadowColor;
 		private CGSize originalShadowOffset;
@@ -138,7 +123,6 @@ namespace MLPAutoComplete
 			this.beginObservingKeyPathsAndNotifications ();
 			this.setDefaultValuesForVariables ();
 
-
 			fetchOperation = new MLPAutoCompleteFetchOperation (this);
 		}
 
@@ -167,9 +151,7 @@ namespace MLPAutoComplete
 			saveCurrentShadowProperties ();
 
 			if (AutoCompleteTableAppearsAsKeyboardAccessory)
-			{
 				this.fetchOperation.Fetch(autoCompleteDataSource);
-			}
 
 			return base.BecomeFirstResponder();
 		}
@@ -240,7 +222,6 @@ namespace MLPAutoComplete
 			}
 		}
 
-
 		public UITableViewCell GetCell (UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
 			UITableViewCell cell;
@@ -276,11 +257,15 @@ namespace MLPAutoComplete
 
 		void configureCell(UITableViewCell cell, NSIndexPath indexPath, string autoCompleteString)
 		{
-			//NSAttributedString boldedString;
+			NSAttributedString boldedString = null;
 
 			var attributedTextSupport = cell.TextLabel.RespondsToSelector (new Selector("setAttributedText:"));
 			if (attributedTextSupport && this.ApplyBoldEffectToAutoCompleteSuggestions) {
-				//TODO
+				var boldedAttributes = new UIStringAttributes
+				{
+					Font = UIFont.BoldSystemFontOfSize(UIFont.SystemFontSize)
+				};
+				boldedString = new NSAttributedString(autoCompleteString, boldedAttributes);
 			}
 
 			var autoCompleteObject = this.AutoCompleteSuggestions [indexPath.Row];
@@ -298,6 +283,18 @@ namespace MLPAutoComplete
 
 			cell.TextLabel.Text = autoCompleteString;
 
+			if (AutoCompleteTableCellTextColor != null)
+			{
+				cell.TextLabel.TextColor = this.AutoCompleteTableCellTextColor;
+			}
+			if (boldedString != null)
+			{
+				cell.TextLabel.AttributedText = boldedString;
+			}
+			else
+			{
+				cell.TextLabel.Text = autoCompleteString;
+			}
 			//TODO
 			//
 			//			if (AutoCompleteTableCellTextColor) {
@@ -711,31 +708,6 @@ namespace MLPAutoComplete
 			fetchOperation.Fetch (autoCompleteDataSource);
 		}
 
-
-
-		#region IMLPAutoCompleteFetchOperation implementation
-
-		public void AutoCompleteTermsDidFetch (Dictionary<string, bool> fetchInfo)
-		{
-			throw new NotImplementedException ();
-		}
-
-		#endregion
-
-		#region IMLPAutoCompleteSortOperation implementation
-
-		public void AutoCompleteTermsDidSort (string[] completions)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public int MaximumEditDistanceForAutoCompleteTerms ()
-		{
-			throw new NotImplementedException ();
-		}
-
-		#endregion
-
 		void setDefaultValuesForVariables()
 		{
 			this.ClipsToBounds = false;
@@ -757,12 +729,6 @@ namespace MLPAutoComplete
 			this.AutoCompleteBoldFontName = UIFont.BoldSystemFontOfSize (13);
 
 			this.AutoCompleteSuggestions = new string[]{};
-
-			this.AutoCompleteSortQueue = new NSOperation ();
-			this.AutoCompleteSortQueue.Name = String.Format ("Autocomplete queue{0}", new Random ().Next ());
-
-			this.AutoCompleteFetchQueue = new NSOperation ();
-			this.AutoCompleteSortQueue.Name = String.Format ("Fetch queue{0}", new Random ().Next ());
 		}
 
 	}
