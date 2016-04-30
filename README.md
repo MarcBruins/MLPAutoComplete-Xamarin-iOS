@@ -2,9 +2,7 @@
 
 A Xamarin iOS port for https://github.com/EddyBorja/MLPAutoCompleteTextField
 
-Only basic functionality works for now. It is nowhere near completion. The sorting alghorithm is not implemented yet and customcell don't work yet.
-
-Feel free to contact me or to just contribute to make this project production ready.
+![Alt text](/autocompleteDemo.png "Screenshot")|![Alt text](/keyboardDemo.png "Screenshot")
 
 ### Step 1 Register your UITextField base class as MLPAutoCompleteTextField
 
@@ -54,14 +52,16 @@ public class MyDataSource : IMLPAutoCompleteTextFieldDataSource
 
 
 ```sh
-var field = autoTextField;
-field.Setup (new MyDataSource ());
+autoTextField.Setup (new MyDataSource ());
 ```	
 If you want to use the sorting alghoritm set second parameter to true
 
 ```sh
-var field = autoTextField;
-field.Setup (new MyDataSource (), true);
+autoTextField.Setup (new MyDataSource (), true);
 ```	
 
-
+You can also switch to a Keyboardaccesory autocomplete table
+```sh
+field.Setup (new MyDataSource (),true);
+		field.AutoCompleteTableAppearsAsKeyboardAccessory = true;
+```	
