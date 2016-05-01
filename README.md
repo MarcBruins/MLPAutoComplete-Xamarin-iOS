@@ -62,6 +62,6 @@ autoTextField.Setup (new MyDataSource (), true);
 
 You can also switch to a Keyboardaccesory autocomplete table
 ```sh
-field.Setup (new MyDataSource (),true);
-		field.AutoCompleteTableAppearsAsKeyboardAccessory = true;
+autoTextField.Setup (new MyDataSource (),true);
+autoTextField.AutoCompleteTableAppearsAsKeyboardAccessory = true;
 ```	
