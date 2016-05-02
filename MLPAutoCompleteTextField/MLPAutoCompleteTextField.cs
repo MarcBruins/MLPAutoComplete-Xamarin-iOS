@@ -257,15 +257,27 @@ namespace MLPAutoComplete
 
 		void configureCell(UITableViewCell cell, NSIndexPath indexPath, string autoCompleteString)
 		{
-			NSAttributedString boldedString = null;
+			NSMutableAttributedString boldedString = null;
 
 			var attributedTextSupport = cell.TextLabel.RespondsToSelector (new Selector("setAttributedText:"));
 			if (attributedTextSupport && this.ApplyBoldEffectToAutoCompleteSuggestions) {
+				
 				var boldedAttributes = new UIStringAttributes
 				{
-					Font = UIFont.BoldSystemFontOfSize(UIFont.SystemFontSize)
+					Font = UIFont.BoldSystemFontOfSize(UIFont.SystemFontSize),
+
 				};
-				boldedString = new NSAttributedString(autoCompleteString, boldedAttributes);
+
+				var startIndex = autoCompleteString.ToLower().IndexOf(this.Text.ToLower());
+				var totalLength = autoCompleteString.Length;
+
+				boldedString = new NSMutableAttributedString(autoCompleteString);
+
+				if (startIndex != -1) {
+					NSRange range = new NSRange(startIndex + Text.Length, totalLength - Text.Length);
+					boldedString.SetAttributes(boldedAttributes.Dictionary, range);
+				}
+
 			}
 
 			var autoCompleteObject = this.AutoCompleteSuggestions [indexPath.Row];
@@ -289,6 +301,7 @@ namespace MLPAutoComplete
 			}
 			if (boldedString != null)
 			{
+				
 				cell.TextLabel.AttributedText = boldedString;
 			}
 			else
