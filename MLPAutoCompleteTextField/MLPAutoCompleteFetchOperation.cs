@@ -106,18 +106,6 @@ namespace MLPAutoComplete
 		{
 			_textField.AutoCompleteSuggestions = completions;
 			_textField.AutoCompleteTableView.ReloadData();
-
-
-			//TODO Sort all the things!
-
-//				[self setAutoCompleteSuggestions:completions];
-//				[self.autoCompleteTableView reloadData];
-//
-//				if ([self.autoCompleteDelegate
-//					respondsToSelector:@selector(autoCompleteTextField:didChangeNumberOfSuggestions:)]) {
-//					[self.autoCompleteDelegate autoCompleteTextField:self
-//						didChangeNumberOfSuggestions:self.autoCompleteSuggestions.count];
-					
 		}
 
 	}

@@ -264,8 +264,7 @@ namespace MLPAutoComplete
 				
 				var boldedAttributes = new UIStringAttributes
 				{
-					Font = UIFont.BoldSystemFontOfSize(UIFont.SystemFontSize),
-
+					Font = UIFont.BoldSystemFontOfSize(UIFont.SystemFontSize)
 				};
 
 				var startIndex = autoCompleteString.ToLower().IndexOf(this.Text.ToLower());
@@ -277,7 +276,6 @@ namespace MLPAutoComplete
 					NSRange range = new NSRange(startIndex + Text.Length, totalLength - Text.Length);
 					boldedString.SetAttributes(boldedAttributes.Dictionary, range);
 				}
-
 			}
 
 			var autoCompleteObject = this.AutoCompleteSuggestions [indexPath.Row];
