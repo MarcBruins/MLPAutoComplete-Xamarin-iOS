@@ -278,7 +278,7 @@ namespace MLPAutoComplete
 
 					NSRange range = new NSRange(start,length);
 
-					if((start+length) < totalLength)
+					if((start+length) <= totalLength)
 						boldedString.SetAttributes(boldedAttributes.Dictionary, range);
 				}
 			}
