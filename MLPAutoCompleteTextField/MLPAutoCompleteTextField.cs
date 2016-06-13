@@ -273,8 +273,13 @@ namespace MLPAutoComplete
 				boldedString = new NSMutableAttributedString(autoCompleteString);
 
 				if (startIndex != -1) {
-					NSRange range = new NSRange(startIndex + Text.Length, totalLength - Text.Length);
-					boldedString.SetAttributes(boldedAttributes.Dictionary, range);
+					var start = startIndex + Text.Length;
+					var length = totalLength - Text.Length;
+
+					NSRange range = new NSRange(start,length);
+
+					if((start+length) < totalLength)
+						boldedString.SetAttributes(boldedAttributes.Dictionary, range);
 				}
 			}
 
