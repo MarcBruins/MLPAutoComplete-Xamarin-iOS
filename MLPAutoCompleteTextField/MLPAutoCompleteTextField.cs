@@ -208,6 +208,9 @@ namespace MLPAutoComplete
 			string autoCompleteString = cell.TextLabel.Text;
 			this.Text = autoCompleteString;
 
+			// Trigger the value changed event
+			this.SendActionForControlEvents(UIControlEvent.EditingChanged);
+
 			var autoCompleteObject = this.AutoCompleteSuggestions[indexPath.Row];
 			if (autoCompleteObject != null && autoCompleteObject is MLPAutoCompletionObject) {
 				this.autoCompleteDelegate.AutoCompleteTextField (this, autoCompleteString,(MLPAutoCompletionObject) autoCompleteObject, indexPath);
