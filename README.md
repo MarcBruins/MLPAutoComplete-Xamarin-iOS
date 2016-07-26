@@ -1,4 +1,5 @@
-# MLPAutoComplete-Xamarin-iOS
+# MLPAutoComplete-Xamarin-iOS 
+I personally recommend using : https://github.com/MarcBruins/MBAutoComplete instead of this library.
 
 A Xamarin iOS port for https://github.com/EddyBorja/MLPAutoCompleteTextField
 
